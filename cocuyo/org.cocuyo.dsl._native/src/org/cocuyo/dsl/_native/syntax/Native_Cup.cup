@@ -1,0 +1,31 @@
+package org.cocuyo.dsl._native.syntax;
+/*open-import*/
+import java_cup.runtime.*;
+/*close-import*/
+
+init with {:  :};
+scan with {: return getScanner().next_token(); :};
+/*open-init*//*close-init*/
+
+terminal
+	LIT_3/*.*/, LIT_2/*is*/, LIT_1/*native*/, LIT_0/*package*/, TEXT/*text*/, ID/*id*/;
+
+non terminal
+	CompileUnit, Name, Id;
+
+
+/* Rules (3) */
+
+CompileUnit
+	::=	LIT_0/*package*/ Name LIT_1/*native*/ Id LIT_2/*is*/ TEXT/*text*/
+	|	LIT_0/*package*/ Name
+	|	LIT_1/*native*/ Id LIT_2/*is*/ TEXT/*text*/
+	|	
+	/*open-CompileUnit*//*close-CompileUnit*/;
+Name
+	::=	Id LIT_3/*.*/ Name
+	|	Id
+	/*open-Name*//*close-Name*/;
+Id
+	::=	ID/*id*/
+	/*open-Id*//*close-Id*/;

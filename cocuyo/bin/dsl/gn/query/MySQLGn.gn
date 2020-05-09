@@ -1,0 +1,17 @@
+package dsl.gn.query
+
+gen MySQLGn
+	fun query(_query)
+		select(_query)
+	end
+	fun select(_query)
+		"select "  					
+		for _col in _query.columns sep ", " do
+			name(_col)
+		end				
+		" from " name(_query.table) ";"
+	end
+	fun name(_name)
+		"`" _name "`"
+	end
+end

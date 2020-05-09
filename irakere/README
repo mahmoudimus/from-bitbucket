@@ -1,0 +1,61 @@
+Lo que va faltando:
+
+Creación del AST:
+
+. Si la regla es de la forma:
+
+r (R) : A1 | ... | An ;
+
+entonces, cada alternativa crea un R.
+
+. Si la regla es de la forma:
+
+r : A1 | ... | An;
+
+Entonces, si cada alternativa está compuesta por un único símbolo y este es un no terminal,
+no se construye AST, sino que se devuelve el construido por la regla asociada a cada Ai.
+Si Ai es un símbolo inline, entonces se crea el AST asociado a este.
+
+De lo contrario, se crea un AST por defecto. 
+
+entonces, cada alternativa construye un R.
+
+. Si la regla no 
+
+
+
+
+- Por ahora, las listas se pueden construir de dos formas:
+
+S*  S+
+
+o
+
+L(List) : S:item (COMMA S:item)*:list
+
+
+La primera forma es automática
+en la segunda, la clase List se construye de de forma normal pero sabe comportarse como lista.
+Pues una vez llevada a bnf quedaria:
+
+L(List) : S:item __list_0 :list
+
+La desventaja de la primera es que crea una lista de python [] y no una que el usuario defina.
+La desventaja de la segunda es que hay que escribir más.
+
+PROPUESTAS DE SINTAXIS:
+
+expr -> List:
+		(expr '+')? term -> ExprBin(juan=pepe, lola=cuca)
+;
+	expr '+' term -> ExprBin
+
+prog yield Prog(prop='fistula', desfistula=''):
+	'program' ID body
+;
+
+La forma actual para los simbolos inline es:
+
+expr: Expr => expr "+" term | term;
+
+donde el simbolo no terminal va a la izquierda de la alternativa.

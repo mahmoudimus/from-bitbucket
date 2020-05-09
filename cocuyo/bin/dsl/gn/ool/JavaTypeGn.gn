@@ -1,0 +1,12 @@
+package dsl.gn.ool
+
+gen JavaTypeGn is JavaGn		
+	
+	fun file(_code, _name, _dir_path = {"."})
+		in 
+			_dir_path /_name ".java" 
+		write
+			_code
+		end
+	end
+end

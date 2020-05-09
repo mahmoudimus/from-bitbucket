@@ -1,0 +1,24 @@
+#!/usr/bin/batch
+#echo removing ast folder
+echo
+echo
+echo "***********Cocuyo**********"
+echo
+echo
+cocuyo CocuyoGrammar.gr Main.gen -s org.cocuyo.gen.Main
+echo
+echo
+echo
+echo "************JFlex**********"
+echo
+echo
+echo
+jflex -nobak CocuyoGrammar.jflex
+echo
+echo
+echo
+echo "************Cup************"
+echo
+echo
+echo
+cupp CocuyoGrammar.cup

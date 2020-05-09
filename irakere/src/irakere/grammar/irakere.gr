@@ -1,0 +1,29 @@
+
+unit(Grammar)
+	:	Grammar => (GRAMMAR ID:name)? rule:item*:rules
+;
+
+rule(Rule)
+	:	ID:name (LPAR ID:ast_name RPAR)? COLON alts:alts SEMI
+;
+
+alts(List)
+	:	alt:item (OR alt:item)*:list
+;
+
+alt(Alt)
+	:	alt_elem:item*:elems
+;
+
+alt_elem
+	:	ListElem => alt_elem:base (TIMES | GUESS | PLUS):count
+	|	FieldElem => alt_elem:base COLON ID:field_id
+	|	basic_alt_elem
+;
+
+basic_alt_elem
+	:	SubRule => LPAR alts:alts RPAR
+	|	InlineSymbol => ID:name IMPL alt:alt
+	| 	Symbol => ID:name
+	|	Symbol => STRING:name
+;

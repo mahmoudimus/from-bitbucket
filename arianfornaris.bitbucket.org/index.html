@@ -1,0 +1,103 @@
+<html>
+<body>
+
+<script>
+var temaID = "";
+var temaTitle = "";
+var temaAuthor = "";
+var temaEmail = "";
+
+function startTema(id, title, author, email) {
+	temaID = id;
+	temaTitle = title;
+	temaAuthor = author;
+	temaEmail = email;
+	
+	document.write("<h2 id='" + id +"' autor='" + author + "'>" + title.toUpperCase() + "</h2>");
+	document.write("<i>por " + author +" (" +  email + ")</i><br/><br/>");
+}
+
+function endTema() {
+	document.write("<a href='mp3/" + temaID + ".mp3'>Aquí el mp3</a><br>");
+}
+
+function n(str) {
+	document.write("<pre style='color:purple'>" + str + "</pre>");
+}
+
+function v(str) {
+	document.write("<pre>" + str + "</pre>");
+}
+
+function c(str) {
+	document.write("<i><span style='color:black'>" + str + "</span></i><br/>");
+}
+
+</script>
+
+<table><tr><td width="20%"/><td>
+
+
+<h1>LAS CANCIONES DEL IMASMAS</h1>
+
+
+<div id='index'> </div>
+<br/>
+
+
+
+<script>
+startTema('era_una_noche_de_luna', "Era una noche de Luna", "Arian Fornaris", "boniatillo@gmail.com");
+n("DO        RE       MI");
+v("El mundo estaba jodio");
+n("FA");
+v("y nadie lo puede arreglar");
+v("");
+n("SOL   RE");
+v("quien tenga eso");
+c("(se repite...)")
+v("que lo deseche");
+
+endTema();
+</script>
+
+
+
+<script>
+startTema('el_mundo_esta_jodio', "El mundo esta jodio", "Arian Fornaris", "boniatillo@gmail.com");
+c("Esta cancion se la hicieron al bobo de la esquina");
+n("LA");
+v("El mundo");
+n("RE");
+v("estaba");
+n("SOL");
+v("jodio");
+endTema();
+</script>
+
+
+
+
+</td><td width="20%"/></tr></table>
+<br>
+<hr/>
+<span>SI QUIERES SER PARTE DEL GRUPO MUSICAL IMASMAS LE MANDAS UN CORREO A FORNARIS O AL KIKE Y YA. SI ADEMÁS NOS MANDAS UNA INTERPRETACIÓN DE UNO(S) DE NUESTROS TEMAS SE NOS VA A SUBIR AÚN MÁS EL EGO Y TE DECLARAREMOS MIEMBRO HONORIFICO. PERO SI MANDAS TU PROPIO TEMA POR FAVOR QUE NO ESTÉ MUY BUENO PORQUE LE DAÑARÁS LA AUTOSTIMA AL KIKE Y ESA NUNCA PUEDE SER LA IDEA. SI NO SABES TOCAR UN INSTRUMENTO, NO TE DETENGAS, LO IMITAS CON LA BOCA O CANTAS ACAPELLA Y YA. EN ÚLTIMA INSTANCIA, SI QUIERES SER PARTE DEL GRUPO Y NO TIENES LA MINIMA CREATIVIDAD, NO IMPORTA, MÁNDANOS UNA FOTO Y DEBAJO LE PONES ALGUNA FRASE AGRADABLE DONDE SE MENCIONE AL KIKE.</span>
+
+</body>
+
+<script>
+var indexHtml = "";
+var titles = document.getElementsByTagName("h2");
+
+for(i = 0; i < titles.length;i++) {
+	var title = titles[i];
+	indexHtml += (i == 0? "" : " * ") + "<a href='#" + title.id + "'>" + title.innerHTML + " (" + title.getAttribute('autor') + ") </a>";
+	
+	var tema = title.getElementsByTagName("div");
+}
+
+var indexElem = document.getElementById('index');
+indexElem.innerHTML = indexHtml;
+</script>
+
+</html>

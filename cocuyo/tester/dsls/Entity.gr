@@ -1,0 +1,49 @@
+
+@(
+	parser_package_name = "org.cocuyo.dsl.entity.syntax"
+	ast_package_name = "org.cocuyo.dsl.entity.ast"
+)
+grammar Entity
+	EntityCompileUnit
+		-> 	("package" Name => PackageDef)? Model*
+	;
+	Model
+		->	"model" Id ModelElement* "end"
+	;		
+	ModelElement
+		-> Entity | Type
+	;	
+	Entity
+		-> "entity" Id ("is" Name)? EntityElement* "end"	
+	;
+	EntityElement
+		->	("*" => Modifier)? Id ":" FieldType => Field
+	;	
+	FieldType
+		->	Name Cardinality? ("(" TypeOptionList ")")?
+	;
+	Cardinality
+		-> "[]"
+	;
+	TypeOptionList
+		->	Option ("," TypeOptionList)?		
+	;
+	Option
+		-> Id "=" Literal
+	;
+	Literal 
+		->	string:IToken => StringLiteral 
+		| 	number:IToken => NumberLiteral
+		| 	symbol:IToken => SymbolLiteral
+	;
+	Type
+		->	"type" Id "=" FieldType
+	;
+	Name
+		->	Id "." Name
+		|	Id
+	;	
+	Id
+		->	id:IToken
+	;
+end

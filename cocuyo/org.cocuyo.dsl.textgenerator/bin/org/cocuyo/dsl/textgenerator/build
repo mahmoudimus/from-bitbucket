@@ -1,0 +1,25 @@
+#!/usr/bin/batch
+#echo removing ast folder
+#rm -R ast
+echo
+echo
+echo "***********Cocuyo**********"
+echo
+echo
+cocuyo TextGeneratorGrammar.gr Main.gen -s org.cocuyo.gen.Main
+echo
+echo
+echo
+echo "************JFlex**********"
+echo
+echo
+echo
+jflex -nobak TextGeneratorGrammar.jflex
+echo
+echo
+echo
+echo "************Cup************"
+echo
+echo
+echo
+cup -symbols TextGeneratorGrammarSymbol -expect 1  -parser TextGeneratorGrammarCupParser TextGeneratorGrammar.cup

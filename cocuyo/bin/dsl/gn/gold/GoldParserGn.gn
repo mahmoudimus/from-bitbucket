@@ -1,0 +1,36 @@
+package dsl.gn.gold 
+
+import dsl.gn.ool
+
+gen GoldParserGn is CSharpTypeGn
+	fun grammar(_grammar)
+		_parser_name = parser_name(_grammar.name)
+		
+		file(_parser_name, _grammar.parser_path):
+			namespace(_grammar.parser_package_name):
+				imports:
+					"Cocuyo.Parsing"
+					"Cocuyo.Parsing.Gold"
+				end
+				
+				'public class ' _parser_name '<T> : GeneralGoldParser<T> where T : IAST'  
+				block:
+					user_code("other-members") $
+					
+					'public ' _parser_name '():base("' 
+					_grammar.parser_path / / _grammar.name 
+					'_Gold.cgt", new  ' _grammar.name 'ASTBuilder())'
+					block:
+					end
+					
+					
+				end 
+			end
+		end
+	end
+	
+	fun parser_name(_name)
+		_name "Parser"
+	end
+	
+end

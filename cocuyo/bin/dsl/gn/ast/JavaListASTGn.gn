@@ -1,0 +1,41 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen JavaListASTGn is JavaASTGn 
+
+	fun extends_clause(_type)
+		" extends " list_ast_super_class(_type)
+		super(_type)
+	end
+
+	fun list_ast_super_class(_type)		
+		"ASTList<" 
+		_type_name = _type.elem_child.type_name
+		
+		if _type.elem_child.is_from_terminal do
+			_type_name
+		else
+			ast_type_name(_type_name)
+		end 
+		
+		">"
+	end
+
+	fun type_fields(_type) end
+
+	fun type_init_methods(_type) end
+
+	fun default(_hierarchy)
+		file("ASTList", _hierarchy.base_path):
+			_code = {				
+				>								
+				"public class ASTList<T> extends org.cocuyo.parsing.ASTList<T>"
+				block: end
+				$
+			}
+			"package " _hierarchy.ast_package_name ";" $			
+			user_code("default-list", _code) 						
+		end
+	end
+
+end

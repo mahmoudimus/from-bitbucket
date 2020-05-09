@@ -1,0 +1,18 @@
+package dsl.gn.ool
+
+gen OS
+	fun path_from_list(_list)
+		for _i in _list sep / do
+			_i
+		end
+	end
+end
+
+gen OOLGn
+	fun field_name(_name) _name end
+	fun arg_name(_name) _name end
+	fun local_name(_name) _name end
+	fun method_name(_name) _name end
+	fun type_name(_name) _name end	
+end
+

@@ -1,0 +1,19 @@
+package dsl.gn.ool
+
+gen CppLikeGn is OOLGn
+	fun block(_code) 
+		$ "{" $
+		indent
+			_code
+		end
+		$
+		"}"
+	end
+	fun user_code(_tag, _def = $)
+		get "//open-" _tag .. "//close-" _tag or _def
+		end
+	end
+	fun multi_comment(_code)
+		"/*" _code "*/"
+	end
+end

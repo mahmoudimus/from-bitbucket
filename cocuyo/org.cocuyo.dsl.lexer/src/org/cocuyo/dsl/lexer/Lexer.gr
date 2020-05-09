@@ -1,0 +1,35 @@
+
+@(
+	parser_package_name = "org.cocuyo.dsl.lexer.syntax"
+	ast_package_name = "org.cocuyo.dsl.lexer.ast"
+)
+grammar Lexer
+
+Unit
+	-> 	("package" Name => PackageDef)? LexerDef*
+	;
+	LexerDef
+		->	"lexer" id:IToken Include* Regex*  TransitionSet* "end"
+	;
+	Include
+		->	"include" id:IToken "from" Name
+		|   "include" Name
+	;
+	Regex
+		->	id:IToken "=" line:IToken
+	;
+	TransitionSet
+		-> "on" from-id:IToken ("yield" yield-id:IToken)? ("->" go-id:IToken)? Transition+
+	;
+	Transition
+		->	Pattern ("yield" yield-id:IToken)? ("->" go-id:IToken)?
+	;
+	Pattern
+		->	item-id:IToken 
+		| 	item-string_literal:IToken 
+	;
+	Name 
+		-> 	id:IToken "," Name
+		|	id:IToken
+	;	
+end

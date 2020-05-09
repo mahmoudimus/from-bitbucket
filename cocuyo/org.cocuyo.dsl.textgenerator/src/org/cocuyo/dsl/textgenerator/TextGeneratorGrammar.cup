@@ -1,0 +1,178 @@
+package org.cocuyo.languages.textgenerator;
+/*open-import*/
+import java_cup.runtime.*;
+import cocuyo.parsing.cup.*;
+import cocuyo.parsing.*;
+/*close-import*/
+
+init with {:  :};
+scan with {: return getScanner().next_token(); :};
+/*open-init*//*close-init*/
+
+terminal
+	PACKAGE, IMPORT, GEN, IS, END, _PTO, AS, ON, DO, FUN, _LPAR, _RPAR, RETURN, _EQUAL, _COMMA, _LKEY, _RKEY, _MONEY, _MINUS, INDENT, SUPER, _QUERY, STRING_LITERAL, NUMBER_LITERAL, TRUE, FALSE, _SLASH, IN, WRITE, ASPECTS, LISTEN, GET, _PTO_PTO, OR, IF, ELSE, ELIF, NOT, FOR, SEP, _DPTO, ID
+;
+
+non terminal
+	CompileUnit, PackageDef, UnitElementList, UnitElement, Import, Generator, GeneratorMemberList, GeneratorMember, AliasDecl, AspectDecl, FuncDecl, FuncFormalArgList, FormalArg, Code, GetCode, Conditional, ConditionalPart, Condition, ForLoop, FuncCallArgs, FuncCallArguments, FuncCallArgList, FuncCallArg, CodeList, NameList, Name, NameIdList, Id
+;
+
+
+/* Rules (28) */
+
+CompileUnit
+	::=	PackageDef UnitElementList
+	/*open-CompileUnit*//*close-CompileUnit*/
+;
+PackageDef
+	::=	PACKAGE Name
+	|	
+	/*open-PackageDef*//*close-PackageDef*/
+;
+UnitElementList
+	::=	UnitElement UnitElementList
+	|	UnitElement
+	/*open-UnitElementList*//*close-UnitElementList*/
+;
+UnitElement
+	::=	Generator
+	|	Import
+	/*open-UnitElement*//*close-UnitElement*/
+;
+Import
+	::=	IMPORT Name
+	/*open-Import*//*close-Import*/
+;
+Generator
+	::=	GEN Id IS NameList GeneratorMemberList END
+	|	GEN Id GeneratorMemberList END
+	/*open-Generator*//*close-Generator*/
+;
+GeneratorMemberList
+	::=	GeneratorMember GeneratorMemberList
+	|	
+	/*open-GeneratorMemberList*//*close-GeneratorMemberList*/
+;
+GeneratorMember
+	::=	AliasDecl
+	|	FuncDecl
+	|	AspectDecl
+	/*open-GeneratorMember*//*close-GeneratorMember*/
+;
+AliasDecl
+	::=	Id _PTO Id AS Id
+	/*open-AliasDecl*//*close-AliasDecl*/
+;
+AspectDecl
+	::=	ON Name DO Id
+	/*open-AspectDecl*//*close-AspectDecl*/
+;
+FuncDecl
+	::=	FUN Id _LPAR FuncFormalArgList _RPAR CodeList END
+	|	FUN Id _LPAR FuncFormalArgList _RPAR RETURN Name
+	|	Id _EQUAL Code
+	/*open-FuncDecl*//*close-FuncDecl*/
+;
+FuncFormalArgList
+	::=	FormalArg _COMMA FuncFormalArgList
+	|	FormalArg
+	|	
+	/*open-FuncFormalArgList*//*close-FuncFormalArgList*/
+;
+FormalArg
+	::=	Id
+	|	Id _EQUAL Code
+	/*open-FormalArg*//*close-FormalArg*/
+;
+Code
+	::=	_LKEY CodeList _RKEY
+	|	ForLoop
+	|	_MONEY
+	|	_MINUS
+	|	INDENT CodeList END
+	|	Code _PTO Id FuncCallArgs
+	|	Id FuncCallArgs
+	|	SUPER FuncCallArgs
+	|	Code _PTO Id
+	|	Code _PTO Id _QUERY
+	|	Id
+	|	SUPER
+	|	STRING_LITERAL
+	|	NUMBER_LITERAL
+	|	TRUE
+	|	FALSE
+	|	Id _EQUAL Code
+	|	Conditional
+	|	GetCode
+	|	_SLASH
+	|	IN CodeList WRITE CodeList END
+	|	ASPECTS NameList LISTEN CodeList END
+	/*open-Code*//*close-Code*/
+;
+GetCode
+	::=	GET CodeList _PTO_PTO CodeList OR CodeList END
+	|	GET CodeList _PTO_PTO CodeList END
+	/*open-GetCode*//*close-GetCode*/
+;
+Conditional
+	::=	IF ConditionalPart END
+	/*open-Conditional*//*close-Conditional*/
+;
+ConditionalPart
+	::=	Condition DO CodeList ELSE CodeList
+	|	Condition DO CodeList ELIF ConditionalPart
+	|	Condition DO CodeList
+	/*open-ConditionalPart*//*close-ConditionalPart*/
+;
+Condition
+	::=	Code
+	|	NOT Code
+	/*open-Condition*//*close-Condition*/
+;
+ForLoop
+	::=	FOR Id IN CodeList DO CodeList END
+	|	FOR Id IN CodeList SEP CodeList DO CodeList END
+	/*open-ForLoop*//*close-ForLoop*/
+;
+FuncCallArgs
+	::=	_LPAR FuncCallArguments _RPAR _DPTO CodeList END
+	|	_LPAR FuncCallArguments _RPAR
+	|	_DPTO CodeList END
+	/*open-FuncCallArgs*//*close-FuncCallArgs*/
+;
+FuncCallArguments
+	::=	FuncCallArgList
+	/*open-FuncCallArguments*//*close-FuncCallArguments*/
+;
+FuncCallArgList
+	::=	FuncCallArgList _COMMA FuncCallArg
+	|	FuncCallArg
+	/*open-FuncCallArgList*//*close-FuncCallArgList*/
+;
+FuncCallArg
+	::=	CodeList
+	/*open-FuncCallArg*//*close-FuncCallArg*/
+;
+CodeList
+	::=	Code CodeList
+	|	
+	/*open-CodeList*//*close-CodeList*/
+;
+NameList
+	::=	Name _COMMA NameList
+	|	Name
+	/*open-NameList*//*close-NameList*/
+;
+Name
+	::=	NameIdList
+	/*open-Name*//*close-Name*/
+;
+NameIdList
+	::=	NameIdList _PTO Id
+	|	Id
+	/*open-NameIdList*//*close-NameIdList*/
+;
+Id
+	::=	ID
+	/*open-Id*//*close-Id*/
+;

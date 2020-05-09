@@ -1,0 +1,21 @@
+package dsl.gn.ool
+
+gen CocuyoCodeFormatGn
+	
+	on JavaGn.field_name do cocuyo_field_name
+	on JavaGn.arg_name do cocuyo_arg_name
+	on JavaGn.local_name do cocuyo_local_name
+	
+	fun cocuyo_field_name(_name)
+		"f" _name
+	end
+	
+	fun cocuyo_arg_name(_name)
+		"a" _name
+	end
+	
+	fun cocuyo_local_name(_name)
+		"_" _name
+	end
+	
+end 

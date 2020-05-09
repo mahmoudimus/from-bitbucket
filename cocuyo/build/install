@@ -1,0 +1,8 @@
+org.cocuyo.help.shell.HelpShellInstaller
+org.cocuyo.dsl.DSLInstaller
+org.cocuyo.dsl.grammar.DSLGrammarInstaller
+org.cocuyo.dsl.textgenerator.DSLTextGeneratorInstaller
+org.cocuyo.dsl._native.DSLNativeInstaller
+org.cocuyo.tool.gold.GoldBuilderToolInstaller
+org.cocuyo.tool.cupjflex.CupJFlexToolInstaller
+org.cocuyo.dsl.lexer.DSLLexerInstaller

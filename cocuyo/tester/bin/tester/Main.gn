@@ -1,0 +1,9 @@
+
+import dsl.gn.lexer
+
+gen Main
+	fun main()
+		gn = JFlexFromLexerGn
+		gn.lexer(Expr)
+	end
+end

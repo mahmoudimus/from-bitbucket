@@ -1,0 +1,33 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen JavaASTFieldSetterGn is JavaASTGn
+	
+	on ASTGn.type_more_members do setters
+	
+	fun setters(_type)
+		if not _type.is_list? do 
+			$
+			for _child in _type.child_nodes sep $ do
+				
+				_type_name = child_type_name(_child)
+				_field_name = field_name(_child.name)
+				
+				JavaASTFieldSetterGn.getter_modifier " void set" 
+				_child.name "(" _type_name " " arg_name("Value") ")"							
+				
+				block:
+					get 
+						"//open-setter-" _field_name $ 
+						.. $ "//close-setter-" _field_name
+					or  
+						"this." _field_name " = " arg_name("Value") ";" 
+					end
+				end
+			end		
+		end		
+	end
+	
+	getter_modifier = "public"
+
+end

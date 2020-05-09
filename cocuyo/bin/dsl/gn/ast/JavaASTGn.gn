@@ -1,0 +1,142 @@
+package dsl.gn.ast
+
+import dsl.gn.ebnf
+import dsl.gn.ool
+
+gen JavaASTGn is ASTGn, JavaTypeGn
+	fun type(_type)
+		file(ast_type_name(_type.name), _type.base_path):
+			type_package(_type)
+			type_imports(_type)
+			type_modifiers(_type)
+			type_type(_type)
+			ast_type_name(_type.name)
+			extends_clause(_type)
+			type_body(_type)
+		end
+	end	
+	
+	fun type_package(_type)
+		"package " _type.hierarchy.ast_package_name		
+		";" $ $
+	end
+	
+	fun type_imports(_type)
+		imports:
+		end
+		$
+	end
+	
+	fun type_modifiers(_type)
+		"public "
+	end
+	
+	fun type_type(_type)
+		"class "		
+	end 
+	
+	fun extends_clause(_type)		
+		
+		_root = ASTGn.ast_type_name("Root")
+		
+		if _type.is_abstract? do
+			" extends "
+			if not _type.has_supers? do
+				"I" _root
+			else
+				_root
+			end
+		else
+			" implements "
+			if not _type.has_supers? do
+				"I" _root			
+			end			
+		end
+			
+		for _super in _type.supers sep ", " do
+			ast_type_name(_super.name)
+		end
+						
+		$
+		user_code("inheritance")
+	end
+	
+	fun type_body(_type)
+		block:			
+			type_fields(_type)
+			type_init_methods(_type)
+			type_more_members(_type)
+			type_members_user_code(_type)			
+		end
+	end
+	
+	fun type_fields(_type)		
+		$
+		for _child_node in _type.child_nodes sep $ do
+			field_decl(_child_node)
+		end
+		$
+	end
+	
+	fun field_decl(_child_node)		
+		"private " 
+		
+		child_type_name(_child_node)				 				
+		" " field_name(_child_node.name) ";"
+	end
+	
+	fun child_type_name(_child_node)
+		_type_name = _child_node.type_name
+		if _child_node.is_from_terminal do
+			_type_name
+		else		
+			ast_type_name(_type_name)
+		end
+	end
+	
+	fun type_init_methods(_type)
+		$
+		for _init_method in _type.init_methods sep $ do
+			init_method(_init_method)
+		end
+		$
+	end
+	
+	fun init_method(_init_method)		
+		"public " ast_type_name(_init_method.name) 
+		"(" method_args(_init_method.args) ")"
+		block:
+			init_method_body(_init_method)			
+		end		
+	end
+	
+	fun init_method_body(_init_method)
+		for _arg in _init_method.args sep $ do			
+			"this." field_name(_arg.name) " = " arg_name(_arg.name) ";"
+		end
+	end
+	
+	fun method_args(_args)
+		for _arg in _args sep ", " do
+			arg(_arg)
+		end
+	end
+	
+	fun arg(_arg)
+		_type_name = _arg.type_name
+		
+		if _arg.is_from_terminal do
+			_type_name
+		else		
+			ast_type_name(_type_name)
+		end
+		
+		" " arg_name(_arg.name)
+	end	
+	
+	fun type_members_user_code(_type, _def = $)
+		$
+		user_code("members", _def)
+		$
+	end
+end

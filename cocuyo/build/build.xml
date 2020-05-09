@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jan 7, 2009 10:44:49 AM                                                        
+
+     Cocuyo DSL Framework    
+     Framework para el desarrollo basado en DSLs
+                   
+     arian.fornaris                                                                
+     ====================================================================== -->
+<project name="Build Cocuyo DSL Framework" default="all" basedir="..">
+	<description>
+            Build Cocuyo DSL Framework
+    </description>
+
+	<property name="bin" value="bin" />
+	<property name="ver" value="0_0_3" />
+	<property name="classes" value="${bin}/classes" />
+
+	<echo>Building Cocuyo DSL Framework v${ver}</echo>
+
+	<!-- ================================= 
+          target: all
+         ================================= -->
+
+	<macrodef name="plugin">
+		<attribute name="name" />
+		<sequential>
+			<javac srcdir="@{name}/src" destdir="${classes}" />
+		</sequential>
+	</macrodef>
+
+	<target name="init">
+		<mkdir dir="${classes}" />
+		<copy file="build/install" todir="${classes}" />
+	</target>
+
+	<target name="all" description="Build all the framework" 
+		depends="help,grammar,generator,tools,native,lexer,plugins">
+		<jar basedir="${classes}" destfile="${bin}/cocuyo_${ver}.jar">
+		</jar>
+		<delete dir="${classes}" />
+	</target>
+
+	<target name="plugins" depends="cocuyo">
+		<plugin name="org.cocuyo.ant"/>
+	</target>
+	
+	<target name="utils" depends="init">
+		<javac srcdir="org.cocuyo.utils/src" destdir="${classes}" />
+	</target>
+
+	<target name="cocuyo" depends="utils">
+		<javac srcdir="org.cocuyo/src" destdir="${classes}" />
+	</target>
+
+	<target name="help" depends="cocuyo">
+		<javac srcdir="org.cocuyo.help.shell/src" destdir="${classes}" />
+	</target>
+
+	<target name="dsl" depends="cocuyo,parsing">
+		<javac srcdir="org.cocuyo.dsl/src" destdir="${classes}" />
+	</target>
+
+	<target name="cup" depends="cup.runtime">
+		<javac srcdir="java_cup_11/src" destdir="${classes}" />
+	</target>
+
+	<target name="jflex" depends="cup.runtime">
+		<javac srcdir="JFlex_1_4_2/src" destdir="${classes}" />
+	</target>
+
+	<target name="cup.runtime" depends="init">
+		<javac srcdir="java_cup_11.runtime/src" destdir="${classes}" />
+	</target>
+
+	<target name="parsing" depends="utils, cup.runtime">
+		<javac srcdir="org.cocuyo.parsing/src" destdir="${classes}" />
+	</target>
+
+	<target name="grammar" depends="dsl">
+		<javac srcdir="org.cocuyo.dsl.grammar/src" destdir="${classes}" />
+	</target>
+
+	<target name="native" depends="dsl">
+		<javac srcdir="org.cocuyo.dsl._native/src" destdir="${classes}" />
+	</target>
+
+	<target name="lexer" depends="dsl">
+		<javac srcdir="org.cocuyo.dsl.lexer/src" destdir="${classes}" />
+	</target>
+
+	<target name="generator" depends="dsl">
+		<javac srcdir="org.cocuyo.dsl.textgenerator/src" destdir="${classes}" />
+	</target>
+
+	<target name="tools" depends="grammar,generator,cup,jflex">
+		<plugin name="org.cocuyo.tool.cupjflex"/>
+		<plugin name="org.cocuyo.tool.gold"/>		
+	</target>
+	
+</project>

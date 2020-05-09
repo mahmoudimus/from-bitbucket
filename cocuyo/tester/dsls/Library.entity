@@ -1,0 +1,25 @@
+package library.arts
+
+model Basic	
+	type string = "org.cocuyo.dsl.entity.type.StringType"
+	type int = "org.cocuyo.dsl.entity.type.IntegerType"
+end
+
+model Auth
+	include Basic
+	type tname = string(length=100)
+	
+	entity Person
+		*name : tname
+		age : int
+	end	
+end
+
+model Arts	
+	include Auth
+	
+	entity Book
+		*title : string
+		pages : int
+	end	
+end

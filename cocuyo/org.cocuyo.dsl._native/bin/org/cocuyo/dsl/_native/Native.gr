@@ -1,0 +1,17 @@
+
+@(
+	parser_package_name = "org.cocuyo.dsl._native.syntax"
+	ast_package_name = "org.cocuyo.dsl._native.ast"
+)
+grammar Native
+	CompileUnit
+		-> 	("package" Name => PackageDef)? ("native" Id "is" text:IToken)?
+	;
+	Name
+		->	Id "." Name
+		|	Id
+	;	
+	Id
+		->	id:IToken
+	;
+end

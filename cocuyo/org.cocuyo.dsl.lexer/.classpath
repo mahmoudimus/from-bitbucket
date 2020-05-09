@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.cocuyo"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.cocuyo.dsl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.cocuyo.parsing"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/java_cup_11.runtime"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JFlex_1_4_2"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

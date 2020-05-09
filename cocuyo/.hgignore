@@ -1,0 +1,10 @@
+
+syntax: regexp
+^bin$
+
+syntax: glob
+
+.metadata
+*.class
+*.zip
+*.rar

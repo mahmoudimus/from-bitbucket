@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<programs>
+
+<prog name='Arbol 1'>
+<![CDATA[
+// Arbol 1
+
+tree(6);
+
+function tree(h) {
+  if (h >= oneInRange(0, 2)) {
+    rotate(oneInRange(-10, 10));
+    sprig(12 * h); // stick
+    
+    left(h); 
+    if(maybe(0.5)) left(h);
+    
+    center(h); 
+    if(maybe(0.5)) center(h);
+    
+    right(h); 
+    if(maybe(0.5)) right(h);
+  } else {
+    style(oneOf(['red', 'black', 'darkred', 'green', 'lightGray']));
+    stick(2);
+  }
+}
+
+function left(h) { branch(h, oneInRange(-30, -20)); }
+function center(h) { branch(h, oneInRange(-5, 5)); }
+function right(h) { branch(h, oneInRange(30, 20)); }
+
+function branch(h, angle) {
+  push();
+  rotate(angle);
+  var len = oneInRange(2, 10 * h);
+  sprig(len);
+  tree(h - 1);
+  
+  if(maybe(0.8))
+    tree(h/2);
+  
+  pop();
+}
+
+function sprig(len) {
+  if (len > 10) { 
+  	for(var i = 0; i < len; i += 2) {
+    	rotate(oneInRange(-7, 7));
+    	stick(2);
+  	}
+  } else {
+    stick(len);
+  }
+}
+
+]]>
+</prog>
+
+<prog name='Pino 1'>
+<![CDATA[
+// Pino 1
+
+for(var i = 300; i > 0; i-= 20) {
+  rotate(oneInRange(-5, 5));
+	pine(i);
+}
+
+function pine(s) {
+  var s2 = s * 0.6;
+  if (s2 < 1) 
+    return;
+  
+  style(s2 < 10 && maybe(0.5)? 'red' : (maybe(0.2)?'darkgreen':'black'));
+  
+	stick(s2/4);
+
+	push();
+	rotate(oneInRange(45, 90));
+	pine(s2 * 0.8);
+	pop();
+  
+  push();
+	rotate(oneInRange(-45, -90));
+	pine(s2 * 0.8);
+	pop();
+  
+  push();
+  pine(s2);
+  pop();
+	
+}
+
+]]>
+</prog>
+
+<prog name="Revolico 1">
+<![CDATA[
+// Revolico 1
+
+stick(canvas.height/2);
+
+for(var i = 0; i < 1000; i++) {
+  style(oneOf(['black', 'red']));
+  rotate(oneInRange(10, 45));
+  stick(10); 
+}
+]]>
+</prog>
+
+<prog name="Revolico 2">
+<![CDATA[
+// Revolico 2
+
+const N = canvas.height/6;
+
+for(var i = 0; i < N; i++) {
+	rotate(oneInRange(-10,10));
+	style(oneOf(['black', 'red']));
+	stick(3);
+}
+
+for(var i = 0; i < 1000; i++) {
+  style(oneOf(['black', 'red']));
+  rotate(oneInRange(10, 45));
+  stick(10); 
+}
+]]>
+</prog>
+<prog name="Yerba 1">
+<![CDATA[
+// Yerba
+
+var w = canvas.width;
+
+// avanza el cursor a la esquina izquierda
+rotate(90);
+up(w/2);
+rotate(-90);
+
+var x = 0;
+
+// mientras el cursor este en pantalla
+while(x < w) {
+  push();
+  rotate(oneInRange(-15, 15));
+ 
+  // pinta tallo verde
+  up(oneInRange(0, 2));
+  style(oneOf(['green', 'darkGreen', 'lightGreen']));
+  var r = oneInRange(-5, 5);
+  for(var i = 0; i < oneInRange(5, 40); i++) {
+    rotate(r);
+      stick(2);
+  }
+ 
+  // pinta una flor con probabilidad 0.8
+  if (maybe(0.8)) {
+      style(oneOf(['lightGray', 'orange', 'darkGreen']));
+      ball(1.5);
+  }
+ 
+  pop();
+ 
+  // avanza el cursor a la derecha
+  var s = oneInRange(0, 2);
+  rotate(-90);
+  up(s);
+  rotate(90);
+ 
+  x += s;
+ }]]>
+</prog>
+<prog name="Arbol con Yerba 1">
+<![CDATA[
+// Arbol 1 con Yerba 1
+
+evalTree('Yerba 1');
+evalTree('Arbol 1');
+]]>
+</prog>
+<prog name="Sol 1">
+<![CDATA[
+function sunColor() {
+  style(oneOf(['orange', 'yellow', 'red']));
+}
+
+function ray(len) {
+  up(oneInRange(20, 40));
+  for(var i = 0; i < len; i++) {
+    rotate(oneInRange(-2, 2));
+    sunColor();
+    stick(1);
+  }
+}
+
+function moveCenter() {
+  rotate(90);
+	up(40);
+}
+
+up(300);
+rotate(oneOf([-90, 90]));
+up(oneInRange(250, 350));
+
+
+// sun opaque ball
+push();
+moveCenter();
+style('lightYellow');
+ball(oneInRange(10, 40));
+pop();
+
+// sun ball
+sunColor();
+for(var i = 0; i < 2 * 360; i++) {
+	sunColor();
+  stick(1);
+	rotate(1 + oneInRange(0, 2));
+}
+
+moveCenter();
+// sun rayies
+for(var i = 0; i < 10; i++) {
+  	push();
+  	rotate(36 * i + oneInRange(-10, 10));
+  	ray(oneInRange(60, 200));
+  	pop();
+	}
+]]>
+</prog>
+
+<prog name='Paisaje 1'>
+<![CDATA[
+evalTree('Sol 1');
+evalTree('Arbol 1');
+evalTree('Yerba 1');
+]]>
+</prog>
+
+</programs>

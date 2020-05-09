@@ -1,0 +1,45 @@
+
+@(
+	parser_package_name = "tiger.syntax"
+	ast_package_name = "tiger.ast"
+)
+grammar Tiger
+
+	Expr 
+		-> left-OrExpr "=" right-OrExpr => AsignExpr
+		|	OrExpr
+	;
+	OrExpr 
+		->	left-OrExpr "|" right-AndExpr => BinaryExpr
+		|	AndExpr
+	;
+	AndExpr
+		->	left-AndExpr "&" right-AddExpr => BinaryExpr
+		|	AddExpr
+	;
+	AddExpr
+		->	left-AddExpr ("+" | "-") right-MulExpr => BinaryExpr
+		|	MulExpr
+	;
+	MulExpr
+		->	left-MulExpr ("*" | "/") right-AccesExpr => BinaryExpr
+		|	AccesExpr
+	;
+	AccesExpr
+		->	expr-AccesExpr "." field-Id => FieldAcces
+		|	expr-AccesExpr "[" index-Expr "]" => ArrayAcces
+		|	Value
+	;
+	Value
+		->	number => Number
+		|	Id 
+		|	"(" ExprList ")" => Secuence
+	;
+	ExprList
+		->	Expr ";" ExprList
+		|	Expr
+	;
+	Id
+		->	ident
+	;
+end

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="bin/cocuyo0.0.3.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/build/build.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=org.cocuyo/src&lt;org.cocuyo.startup{Startup.java[Startup" manifestLocation="/build/MANIFIEST.MF" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=org.cocuyo.utils"/>
+        <javaElement handleIdentifier="=java_cup_11"/>
+        <javaElement handleIdentifier="=org.cocuyo.parsing"/>
+        <file path="/org.cocuyo.dsl.grammar/.project"/>
+        <file path="/org.cocuyo.dsl/.classpath"/>
+        <javaElement handleIdentifier="=org.cocuyo.dsl.entity"/>
+        <javaElement handleIdentifier="=org.cocuyo/src&lt;org.cocuyo"/>
+        <javaElement handleIdentifier="=org.cocuyo.dsl/src"/>
+        <javaElement handleIdentifier="=org.cocuyo/src&lt;org.cocuyo.env"/>
+        <file path="/org.cocuyo.dsl.grammar/.classpath"/>
+        <file path="/org.cocuyo.dsl._native/.classpath"/>
+        <javaElement handleIdentifier="=java_cup_11.runtime"/>
+        <javaElement handleIdentifier="=org.cocuyo.dsl.grammar/src"/>
+        <javaElement handleIdentifier="=org.cocuyo.dsl._native/src"/>
+        <javaElement handleIdentifier="=org.cocuyo.tool.gold"/>
+        <javaElement handleIdentifier="=JFlex_1_4_2"/>
+        <javaElement handleIdentifier="=org.cocuyo/src&lt;org.cocuyo.extension"/>
+        <javaElement handleIdentifier="=org.cocuyo/src&lt;org.cocuyo.startup"/>
+        <file path="/org.cocuyo/install"/>
+        <file path="/org.cocuyo.dsl/.project"/>
+        <file path="/org.cocuyo.dsl._native/.project"/>
+        <javaElement handleIdentifier="=org.cocuyo.tool.cupjflex"/>
+        <javaElement handleIdentifier="=org.cocuyo.dsl.lexer"/>
+        <javaElement handleIdentifier="=org.cocuyo.help.shell"/>
+        <javaElement handleIdentifier="=org.cocuyo.dsl.textgenerator"/>
+    </selectedElements>
+    <fatjar builder="org.eclipse.jdt.ui.plain_jar_builder" launchConfig=""/>
+</jardesc>

@@ -1,0 +1,14 @@
+
+lexer Expr
+	string_delimiter = "'"
+	number = [1..9][0..9]+
+	id = ([a..z,A..Z])+
+
+	from init 
+		string_delimiter goto _string
+		number yield NUMBER
+		id yield ID
+	from _string
+		string_char goto _string
+		string_delimiter yield STRING goto _start
+end

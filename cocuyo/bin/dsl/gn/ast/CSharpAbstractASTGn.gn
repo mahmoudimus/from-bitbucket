@@ -1,0 +1,11 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen CSharpAbstractASTGn is CSharpASTGn 	
+	fun type_fields(_type) end
+	fun type_type(_type)
+		"interface "			
+	end
+	fun type_init_methods(_type) end
+end
+

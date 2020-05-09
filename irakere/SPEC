@@ -1,0 +1,38 @@
+Esta es la especificación del lenguaje.
+La gramática es en forma ebnf:
+s*
+s?
+s+
+(a | b)
+
+Los tokes son identificadores en mayúsculas o una cadena:
+ID
+'for'
+
+Ejemplos de reglas:
+
+expr : expr ('+' | '-' ) term | term;
+
+Los elementos de una alternativa pueden tener el atributo field_id, con el cual se marka el elemento 
+como dato del AST asociado, es decir, será el valor de la propiedad del AST llamada field_id.
+
+Ejemplo:
+
+expr : expr:left ('+'|'-') term:right | term;
+
+La construccion del AST es de la siguiente forma:
+
+expr : 
+		expr:left ('+'|'-') term:right -> ExprBin 
+	| 	term
+
+El símbolo -> X significa que se crea el AST X con las propiedades indicadas por los field_id. 
+La primera leternativa retorna un AST como este:
+
+X(left=expr, right=expr)
+
+Otro ejemplo:
+
+prog (Prog):
+		'program' ID:name body:body
+ 

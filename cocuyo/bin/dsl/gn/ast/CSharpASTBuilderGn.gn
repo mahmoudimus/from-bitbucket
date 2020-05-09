@@ -1,0 +1,201 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+import dsl.gn.ool
+
+gen CSharpASTBuilderGn is CSharpTypeGn
+
+	fun ast_builder(_builder)
+		_name = builder_class_name(_builder)
+
+		file(_name, _builder.grammar.base_path):	
+			namespace(_builder.grammar.ast_package_name):
+				imports({"Cocuyo.Parsing"}) $ $
+				"public class " _name " : ASTBuilder"
+				class_body(_builder)
+			end	
+		end
+	end
+	
+	fun ast_type_name(_name)
+		ASTGn.ast_type_name(_name)		
+	end
+
+	fun class_body(_builder)
+		block:
+			reduce_method(_builder) 
+			build_list_methods(_builder) 
+			build_token_methods(_builder) 
+			user_code("members") 
+		end
+	end
+
+	fun build_list_methods(_builder)
+		for _list_type in _builder.list_types do
+			build_list_methods_of(_list_type)
+		end		
+	end
+	
+	fun build_list_methods_of(_list_type)
+		
+		_elem = _list_type.elem_child.type_name
+		
+		if not _list_type.elem_child.is_from_terminal do
+			_elem = ast_type_name(_elem)
+		end
+		
+		_list = ast_type_name(_list_type.name)
+		
+		"public " _list " BuildList" _list "(" 
+		if _list_type.is_left_rec do
+			_list " aList, " _elem " aElem" 
+			_instr = "aList.Add(aElem);"
+		else
+			_elem " aElem, " _list " aList"
+			_instr = "aList.Insert(0, aElem);"
+		end		
+		")"
+		block:
+			_instr $
+			"return aList;"
+		end
+		$
+		
+		"public " _list " BuildList" _list "(" _elem " aElem)"
+		block:
+			_list " _list = new " _list "();" $
+			"_list.Add(aElem);" $
+			"return _list;"
+		end
+		$
+				
+		"public " _list " BuildList" _list "()"
+		block:
+			"return new " _list "();"
+		end
+		$
+				
+	end
+	
+	fun build_token_methods(_builder)	  	
+		for _terminal in _builder.terminals_info_by_type_name do		     						
+			_name = _terminal.node_type_name			
+			"public " _name  " Build" _name "(object aToken)"
+			block:
+				user_code("build-" _name, $ "return (" _name ") aToken;" $)
+			end
+			$
+		end
+	end
+
+	fun builder_class_name(_builder)
+		_builder.grammar_name "ASTBuilder"
+	end
+
+	fun reduce_method(_builder)
+		"public override void Reduce(int aIndex)"		
+		block:		 
+			"object _ast = null;"$
+			"switch (aIndex)"
+			block:
+				reduce_switch_cases(_builder)		
+			end $						
+		end
+		$
+	end
+
+	fun reduce_switch_cases(_builder)		
+		for _rule_info in _builder.rules_info do
+			for _alt_info in _rule_info.alts_info do				
+				if _alt_info.is_complete_abstract do 					
+					alt_case_comment(_alt_info)	$				
+					multi_comment:		
+						"case " _alt_info.index " reduce an abtract AST"
+					end										
+				else
+					alt_case(_alt_info)
+				end				
+			end
+		end
+	end
+	
+	fun alt_case(_alt_info)
+		alt_case_comment(_alt_info) $
+		"case " _alt_info.index " : "
+		block:			
+			"object[] _alt = Pop(" _alt_info.count_symbols ");"$
+			"_ast = "
+			build_ast_from_alt(_alt_info) ";" $
+			"PushAST(_ast);"$
+			"break;"			
+		end
+		$
+	end
+	
+	fun build_ast_from_alt(_alt_info)		
+		if _alt_info.is_abstract do
+			build_alt(_alt_info)						
+		elif _alt_info.is_list do
+				build_list_alt(_alt_info)
+		else
+			"new " ast_type_name(_alt_info.type_name) "(" 
+			build_alt(_alt_info)
+			")"		
+		end
+	end
+	
+	fun build_alt(_alt_info)
+		for _symbol_info in _alt_info sep ", " do
+			if _symbol_info.is_ast do			
+				build_symbol(_symbol_info)
+			end
+		end
+	end
+	
+	fun build_list_alt(_alt_info)
+		"BuildList" ast_type_name(_alt_info.type_name) "(" build_alt(_alt_info) ")"
+	end
+	
+	fun build_symbol(_symbol_info)
+		if _symbol_info.is_list? do
+			build_list_symbol(_symbol_info)
+		elif _symbol_info.is_virtual? do			
+			build_virtual_symbol(_symbol_info)
+		elif _symbol_info.is_terminal? do		  	
+			build_terminal_symbol(_symbol_info)
+		else		    
+			build_non_terminal_symbol(_symbol_info)
+		end		
+		
+	end
+	
+	fun build_terminal_symbol(_symbol_info)
+		"Build" _symbol_info.node_type_name "(" alt_acces(_symbol_info) ")"
+	end
+	
+	fun build_non_terminal_symbol(_symbol_info)
+		"(" ast_type_name(_symbol_info.node_type_name) ")" alt_acces(_symbol_info) 
+	end
+
+	fun build_virtual_symbol(_symbol_info)
+		build_ast_from_alt(_symbol_info.sub_alt_info)		
+	end
+	
+	fun build_list_symbol(_symbol_info)
+		"list(" alt_acces(_symbol_info) ")"
+	end
+	
+
+	fun alt_acces(_symbol_info)
+		"_alt[" _symbol_info.index "]"
+	end
+	
+	fun alt_case_comment(_alt_info)		
+		multi_comment:
+			$
+			_alt_info.type_name " -> "
+			EBNFGn.alt(_alt_info.alt)		
+			$
+		end		
+	end
+	
+end

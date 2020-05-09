@@ -1,0 +1,4 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen JavaTrivialASTGn is JavaASTGn end

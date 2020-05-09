@@ -1,0 +1,15 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen ASTGn
+	fun type(_type)
+		"type " _type.name
+	end	
+	
+	fun ast_type_name(_name)
+		"AST" _name 
+	end
+	
+	fun type_more_members(_type) 
+	end
+end

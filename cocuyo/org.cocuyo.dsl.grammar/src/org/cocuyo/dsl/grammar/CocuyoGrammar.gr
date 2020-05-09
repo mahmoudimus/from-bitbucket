@@ -1,0 +1,143 @@
+package org.cocuyo.grammars;
+
+grammar CocuyoGrammar
+
+	CompileUnit 
+		: 	PackageDef UnitElementList@unitElements
+	;
+	PackageDef
+		:	"package" Name 
+		|
+	;
+	UnitElementList
+		:	UnitElement UnitElementList
+		|	UnitElement
+	;
+	UnitElement
+		:	Grammar  
+		|	Import
+	;	
+	Import
+		:	"import" Name
+	;
+	Name 
+		:	NameIdList
+	;
+	NameIdList
+		:	NameIdList "." Id
+		|	Id
+	;		
+	Decoration
+		:	DecoratorList
+	;
+	DecoratorList
+		:	Decorator DecoratorList
+		|	Decorator
+	;	
+	Decorator
+		:	ThisDecorator->("@" "(" PropertyList ")")
+		|	ExternalDecorator->("@" Name "(" PropertyList ")")
+		|	ExternalDecorator->("@" Name )
+	; 
+	PropertyList
+		:	Property PropertyList
+		|	
+	;	
+	Property
+		:	Name "=" Value
+		|	Name "{" PropertyList "}"
+		|	Name
+		|	(IToken)"!"@not Name 
+	;
+	Value
+		:	NameValue->( Name )
+		|	NameValue->( Name "(" PropertyList ")" )
+		|	LiteralValue->( (NumberToken)number_literal@number )
+		|	LiteralValue->( (StringToken)string_literal@string )
+		|	ListValue->( "[" ValueList "]" )
+		|	DictionaryValue->( "{" EntryList "}" )
+	;
+	EntryList
+		:	Entry EntryList
+		|	
+	;
+	Entry
+		:	Value@key ":" Value
+	;
+	ValueList
+		:	Value  ValueList		
+		|
+	;
+	Grammar 
+		:	"grammar" Id RuleList "end" 
+		|	Decoration "grammar" Id RuleList "end"
+	;	
+	RuleSet
+		:	Decoration "{" RuleList "}"
+		|	"{" RuleList "}"		
+	;
+	RuleList
+		:	Rule RuleList
+		|	
+	;
+	Rule
+		:	SimpleRule->( Decoration RuleLeftSide@leftSide "->" SubRule ";" )
+		|	SimpleRule->( RuleLeftSide@leftSide "->" SubRule ";" )
+		|	RuleSet		
+	;
+	RuleLeftSide
+		:	Id
+	;	
+	SubRule
+		:	AlternativeList		
+	;
+	AlternativeList
+		:	Alternative "|" AlternativeList
+		|	Alternative			
+	;
+	Alternative
+		:	AltId@id AltExprList@exprlist
+		|	AltId@id AltExprList@exprlist "=>" Symbol
+		|   AltId@id
+	;
+	AltId
+		:	"{"  Id "}"
+		|	"{" "}"
+		|	"{" Decoration Id "}"
+		|	"{" Decoration "}"
+		|	
+	;
+	AltExprList
+		:	AltExpr AltExprList   
+		|	AltExpr
+	;   
+	AltExpr
+		:	AltElement 
+		|	AltExpr Cuantifier->( (IToken)"+"@token )
+		|	AltExpr Cuantifier->( (IToken)"*"@token )
+		|	AltExpr Cuantifier->( (IToken)"?"@token )
+	;			
+	AltElement
+		:	Symbol
+		|	SubRuleElement->( "(" SubRule ")" )
+	;
+	Symbol
+		:	Node  
+		| 	Node ":" Id@type
+		| 	Node ":" Id@type "=" Id@builder
+		| 	Node "=" Id@builder 
+		|	Id "-"  Node  				
+		|	Id "-"  Node ":" Id@type
+		|	Id "-"  Node ":" Id@type "=" Id @builder 
+		|	Id "-"  Node "=" Id@builder
+	;	
+	Node
+		:	IdNode->( Decoration Id )		
+		|	IdNode->( Id )
+		|	LiteralNode->( Decoration (IToken)string_literal@token )		
+		|	LiteralNode->( (IToken)string_literal@token )
+	;	
+	Id
+		:	(IToken)id@token
+	;
+end

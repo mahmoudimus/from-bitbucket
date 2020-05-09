@@ -1,0 +1,6 @@
+
+gen A
+	fun main()
+		"Hello"
+	end
+end

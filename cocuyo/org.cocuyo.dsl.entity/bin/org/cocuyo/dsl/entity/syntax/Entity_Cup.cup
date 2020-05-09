@@ -1,0 +1,87 @@
+package org.cocuyo.dsl.entity.syntax;
+/*open-import*/
+import java_cup.runtime.*;
+/*close-import*/
+
+init with {:  :};
+scan with {: return getScanner().next_token(); :};
+/*open-init*//*close-init*/
+
+terminal
+	LIT_15/*include*/, LIT_14/*.*/, LIT_13/*type*/, LIT_12/*=*/, LIT_11/*,*/, LIT_10/*[]*/, LIT_9/*)*/, LIT_8/*(*/, LIT_7/*:*/, LIT_6/***/, LIT_5/*is*/, LIT_4/*entity*/, LIT_3/*end*/, LIT_2/*model*/, LIT_1/*import*/, LIT_0/*package*/, STRING/*string*/, NUMBER/*number*/, SYMBOL/*symbol*/, ID/*id*/;
+
+non terminal
+	EntityCompileUnit, Model, ModelElement, Entity, EntityElement, FieldType, Cardinality, TypeOptionList, Option, Literal, Type, Name, Id, ModelList, IncludeList, ModelElementList, EntityElementList;
+
+
+/* Rules (17) */
+
+EntityCompileUnit
+	::=	LIT_0/*package*/ Name LIT_1/*import*/ Name ModelList
+	|	LIT_0/*package*/ Name ModelList
+	|	LIT_1/*import*/ Name ModelList
+	|	ModelList
+	/*open-EntityCompileUnit*//*close-EntityCompileUnit*/;
+Model
+	::=	LIT_2/*model*/ Id IncludeList ModelElementList LIT_3/*end*/
+	/*open-Model*//*close-Model*/;
+ModelElement
+	::=	Entity
+	|	Type
+	/*open-ModelElement*//*close-ModelElement*/;
+Entity
+	::=	LIT_4/*entity*/ Id LIT_5/*is*/ Name EntityElementList LIT_3/*end*/
+	|	LIT_4/*entity*/ Id EntityElementList LIT_3/*end*/
+	/*open-Entity*//*close-Entity*/;
+EntityElement
+	::=	LIT_6/***/ Id LIT_7/*:*/ FieldType
+	|	Id LIT_7/*:*/ FieldType
+	/*open-EntityElement*//*close-EntityElement*/;
+FieldType
+	::=	Name Cardinality LIT_8/*(*/ TypeOptionList LIT_9/*)*/
+	|	Name Cardinality
+	|	Name LIT_8/*(*/ TypeOptionList LIT_9/*)*/
+	|	Name
+	/*open-FieldType*//*close-FieldType*/;
+Cardinality
+	::=	LIT_10/*[]*/
+	/*open-Cardinality*//*close-Cardinality*/;
+TypeOptionList
+	::=	Option LIT_11/*,*/ TypeOptionList
+	|	Option
+	/*open-TypeOptionList*//*close-TypeOptionList*/;
+Option
+	::=	Id LIT_12/*=*/ Literal
+	/*open-Option*//*close-Option*/;
+Literal
+	::=	STRING/*string*/
+	|	NUMBER/*number*/
+	|	SYMBOL/*symbol*/
+	/*open-Literal*//*close-Literal*/;
+Type
+	::=	LIT_13/*type*/ Id LIT_12/*=*/ FieldType
+	|	LIT_13/*type*/ Id LIT_12/*=*/ STRING/*string*/
+	/*open-Type*//*close-Type*/;
+Name
+	::=	Id LIT_14/*.*/ Name
+	|	Id
+	/*open-Name*//*close-Name*/;
+Id
+	::=	ID/*id*/
+	/*open-Id*//*close-Id*/;
+ModelList
+	::=	Model ModelList
+	|	
+	/*open-ModelList*//*close-ModelList*/;
+IncludeList
+	::=	LIT_15/*include*/ Name IncludeList
+	|	
+	/*open-IncludeList*//*close-IncludeList*/;
+ModelElementList
+	::=	ModelElement ModelElementList
+	|	
+	/*open-ModelElementList*//*close-ModelElementList*/;
+EntityElementList
+	::=	EntityElement EntityElementList
+	|	
+	/*open-EntityElementList*//*close-EntityElementList*/;

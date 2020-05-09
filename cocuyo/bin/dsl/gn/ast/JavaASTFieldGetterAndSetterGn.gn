@@ -1,0 +1,12 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen JavaASTFieldGetterAndSetterGn
+	on ASTGn.type_more_members do getters_and_setters
+	
+	fun getters_and_setters(_type)
+		JavaASTFieldGetterGn.getters(_type)
+		JavaASTFieldSetterGn.setters(_type)	
+	end
+end
+

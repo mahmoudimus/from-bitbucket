@@ -1,0 +1,19 @@
+package dsl.gn.ool
+
+gen CSharpGn is CppLikeGn
+	fun imports(_import_list)
+		for _import in _import_list do
+			"using " _import ";" $
+		end
+		user_code("imports") $
+	end
+	fun field_name(_name)
+		{super(_name)}.lower_case
+	end
+	fun arg_name(_name)
+		{super(_name)}.lower_case
+	end
+	fun local_name(_name)
+		{super(_name)}.lower_case
+	end
+end

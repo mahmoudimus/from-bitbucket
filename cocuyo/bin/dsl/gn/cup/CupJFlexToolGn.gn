@@ -1,0 +1,17 @@
+package dsl.gn.cup 
+import dsl.gn.ast
+
+gen CupJFlexToolGn
+
+	fun grammar(_grammar, _gen_jflex = true)
+		JavaASTHierarchyGn.hierarchy(_grammar.hierarchy)
+		JavaASTBuilderGn.ast_builder(_grammar.ast_builder)
+		CupGn.grammar(_grammar)
+		CupParserGn.parser(_grammar)
+		if _gen_jflex do
+			JFlexGn.grammar(_grammar)
+		end
+		JFlexLexerGn.lexer(_grammar)
+	end
+
+end

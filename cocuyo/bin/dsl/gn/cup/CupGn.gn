@@ -1,0 +1,106 @@
+package dsl.gn.cup
+import dsl.gn.ool
+
+gen CupGn is JavaGn
+
+	fun grammar(_grammar)
+		_grammar = _grammar.BNF
+		in 
+			_grammar.parser_path / _grammar.name "_Cup" ".cup"
+		write
+			"package " _grammar.parser_package_name ";" $
+		
+			imports(_grammar)			
+			$ $
+			init(_grammar)
+			$ $
+			terminals(_grammar)
+			$ $
+			non_terminals(_grammar)
+			$ $
+			rules(_grammar)
+		end
+	end
+	
+	fun user_code(_tag, _default = "")
+		get "/*open-" _tag "*/" .. "/*close-" _tag "*/" or 
+			_default
+		end
+	end
+	
+	fun imports(_grammar)
+		user_code("import", $ "import java_cup.runtime.*;" $)
+	end
+	
+	fun init(_grammar)	
+		"init with {:  :};" $
+		"scan with {: return getScanner().next_token(); :};" $
+		user_code("init")
+	end
+	
+	fun non_terminals(_grammar)	
+		"non terminal" $
+		indent 
+			for _rule in _grammar.rules sep ", " do
+				_rule.name
+			end
+		end
+			
+		";" $
+	end
+		
+	fun terminals(_grammar)
+		"terminal" $
+
+		indent 
+			for _term in _grammar.terminals_by_name sep ", " do			
+				terminal_name(_term.name) "/*" _term.text "*/"
+			end
+		end
+
+		";"
+	end
+	
+	fun terminal_name(_name)	
+		{_name}.upper_case
+	end
+	
+	fun rules(_grammar)	
+		"/* Rules (" _grammar.countRules ") */" $ $
+		for _rule in _grammar.rules do		
+			rule(_rule)
+		end		
+	end
+	
+	fun rule(_rule)
+		_rule.name $
+		indent 		
+			"::=" 
+			for _alt in _rule.alts sep $ "|" do								
+				- alternative(_alt)				
+			end
+			$ user_code(_rule.name)
+		end
+		";" $
+	end
+		
+	fun alternative(_alt)
+		for _symbol in _alt.expressions sep " " do
+			symbol(_symbol)
+		end
+	end
+	
+	fun symbol(_symbol)
+		if _symbol.is_virtual? do						
+				alternative(_symbol.sub_alt)
+		else
+			if _symbol.is_terminal? do
+				terminal_name(_symbol.name) 
+				"/*" _symbol.text "*/"
+			else
+				_symbol.name
+			end
+		end
+	end
+
+end	

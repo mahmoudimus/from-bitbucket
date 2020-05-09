@@ -1,0 +1,44 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen CSharpListASTGn is CSharpASTGn 
+
+	fun extends_clause(_type)
+		" : " list_ast_super_class(_type)		
+		
+		for _super in _type.supers do			
+			", " ast_type_name(_super.name)
+		end
+	end
+
+	fun list_ast_super_class(_type)		
+		"ASTList<" 
+		_type_name = _type.elem_child.type_name
+		
+		if _type.elem_child.is_from_terminal do
+			_type_name
+		else
+			ast_type_name(_type_name)
+		end 		
+		">"
+	end
+
+	fun type_fields(_type) end
+
+	fun type_init_methods(_type) end
+
+	fun default(_hierarchy)
+		file("ASTList", _hierarchy.base_path):
+			_code = {	
+				$ 
+				"public class ASTList<T> : Cocuyo.Parsing.ASTList<T>"
+				block: end
+				$
+			}
+			namespace(_hierarchy.ast_package_name):
+				user_code("default-list", _code)
+			end					 						
+		end
+	end
+
+end

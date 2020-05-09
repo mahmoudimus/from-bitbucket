@@ -1,0 +1,27 @@
+
+import library
+
+gen Main
+	fun entity(_entity)		
+		"entity " _entity.name $   
+		indent
+			for field in _entity.fields do							
+				field.name " : " field.type.name
+				if field.is_required? do 
+					" required"
+				end 
+				$ 
+			end 
+		end
+	end
+	
+	fun main()
+		_model = arts.Arts
+		"model " _model.name $ 
+		for _e in _model.elements do		
+			if _e.is_entity? do
+				entity(_e) $
+			end
+		end
+	end
+end

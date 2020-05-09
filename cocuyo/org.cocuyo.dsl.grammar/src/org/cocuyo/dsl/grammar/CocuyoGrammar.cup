@@ -1,0 +1,189 @@
+package org.cocuyo.languages.grammar;
+/*open-import*/
+import java_cup.runtime.*;
+/*close-import*/
+
+init with {:  :};
+scan with {: return getScanner().next_token(); :};
+/*open-init*//*close-init*/
+
+terminal
+	PACKAGE, IMPORT, _PTO, _AT, _LPAR, _RPAR, _EQUAL, _LKEY, _RKEY, _EXCLAM, NUMBER_LITERAL, STRING_LITERAL, _LCOR, _RCOR, _DPTO, GRAMMAR, END, _MINUS_RANG, _PTOCOMMA, _OR, _EQUAL_RANG, _ADD, _MUL, _QUERY, _MINUS, ID
+;
+
+non terminal
+	CompileUnit, PackageDef, UnitElementList, UnitElement, Import, Name, NameIdList, Decoration, DecoratorList, Decorator, PropertyList, Property, Value, EntryList, Entry, ValueList, Grammar, RuleSet, RuleList, Rule, RuleLeftSide, SubRule, AlternativeList, Alternative, AltId, AltExprList, AltExpr, AltElement, Symbol, Node, Id
+;
+
+
+/* Rules (31) */
+
+CompileUnit
+	::=	PackageDef UnitElementList
+	/*open-CompileUnit*//*close-CompileUnit*/
+;
+PackageDef
+	::=	PACKAGE Name
+	|	
+	/*open-PackageDef*//*close-PackageDef*/
+;
+UnitElementList
+	::=	UnitElement UnitElementList
+	|	UnitElement
+	/*open-UnitElementList*//*close-UnitElementList*/
+;
+UnitElement
+	::=	Grammar
+	|	Import
+	/*open-UnitElement*//*close-UnitElement*/
+;
+Import
+	::=	IMPORT Name
+	/*open-Import*//*close-Import*/
+;
+Name
+	::=	NameIdList
+	/*open-Name*//*close-Name*/
+;
+NameIdList
+	::=	NameIdList _PTO Id
+	|	Id
+	/*open-NameIdList*//*close-NameIdList*/
+;
+Decoration
+	::=	DecoratorList
+	/*open-Decoration*//*close-Decoration*/
+;
+DecoratorList
+	::=	Decorator DecoratorList
+	|	Decorator
+	/*open-DecoratorList*//*close-DecoratorList*/
+;
+Decorator
+	::=	_AT _LPAR PropertyList _RPAR
+	|	_AT Name _LPAR PropertyList _RPAR
+	|	_AT Name
+	/*open-Decorator*//*close-Decorator*/
+;
+PropertyList
+	::=	Property PropertyList
+	|	
+	/*open-PropertyList*//*close-PropertyList*/
+;
+Property
+	::=	Name _EQUAL Value
+	|	Name _LKEY PropertyList _RKEY
+	|	Name
+	|	_EXCLAM Name
+	/*open-Property*//*close-Property*/
+;
+Value
+	::=	Name
+	|	Name _LPAR PropertyList _RPAR
+	|	NUMBER_LITERAL
+	|	STRING_LITERAL
+	|	_LCOR ValueList _RCOR
+	|	_LKEY EntryList _RKEY
+	/*open-Value*//*close-Value*/
+;
+EntryList
+	::=	Entry EntryList
+	|	
+	/*open-EntryList*//*close-EntryList*/
+;
+Entry
+	::=	Value _DPTO Value
+	/*open-Entry*//*close-Entry*/
+;
+ValueList
+	::=	Value ValueList
+	|	
+	/*open-ValueList*//*close-ValueList*/
+;
+Grammar
+	::=	GRAMMAR Id RuleList END
+	|	Decoration GRAMMAR Id RuleList END
+	/*open-Grammar*//*close-Grammar*/
+;
+RuleSet
+	::=	Decoration _LKEY RuleList _RKEY
+	|	_LKEY RuleList _RKEY
+	/*open-RuleSet*//*close-RuleSet*/
+;
+RuleList
+	::=	Rule RuleList
+	|	
+	/*open-RuleList*//*close-RuleList*/
+;
+Rule
+	::=	Decoration RuleLeftSide _MINUS_RANG SubRule _PTOCOMMA
+	|	RuleLeftSide _MINUS_RANG SubRule _PTOCOMMA
+	|	RuleSet
+	/*open-Rule*//*close-Rule*/
+;
+RuleLeftSide
+	::=	Id
+	/*open-RuleLeftSide*//*close-RuleLeftSide*/
+;
+SubRule
+	::=	AlternativeList
+	/*open-SubRule*//*close-SubRule*/
+;
+AlternativeList
+	::=	Alternative _OR AlternativeList
+	|	Alternative
+	/*open-AlternativeList*//*close-AlternativeList*/
+;
+Alternative
+	::=	AltId AltExprList
+	|	AltId AltExprList _EQUAL_RANG Symbol
+	|	AltId
+	/*open-Alternative*//*close-Alternative*/
+;
+AltId
+	::=	_LKEY Id _RKEY
+	|	_LKEY _RKEY
+	|	_LKEY Decoration Id _RKEY
+	|	_LKEY Decoration _RKEY
+	|	
+	/*open-AltId*//*close-AltId*/
+;
+AltExprList
+	::=	AltExpr AltExprList
+	|	AltExpr
+	/*open-AltExprList*//*close-AltExprList*/
+;
+AltExpr
+	::=	AltElement
+	|	AltExpr _ADD
+	|	AltExpr _MUL
+	|	AltExpr _QUERY
+	/*open-AltExpr*//*close-AltExpr*/
+;
+AltElement
+	::=	Symbol
+	|	_LPAR SubRule _RPAR
+	/*open-AltElement*//*close-AltElement*/
+;
+Symbol
+	::=	Node
+	|	Node _DPTO Id
+	|	Node _DPTO Id _EQUAL Id
+	|	Node _EQUAL Id
+	|	Id _MINUS Node
+	|	Id _MINUS Node _DPTO Id
+	|	Id _MINUS Node _DPTO Id _EQUAL Id
+	|	Id _MINUS Node _EQUAL Id
+	/*open-Symbol*//*close-Symbol*/
+;
+Node
+	::=	Decoration Id
+	|	Id
+	|	Decoration STRING_LITERAL
+	|	STRING_LITERAL
+	/*open-Node*//*close-Node*/
+;
+Id
+	::=	ID
+	/*open-Id*//*close-Id*/
+;

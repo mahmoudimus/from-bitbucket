@@ -1,0 +1,171 @@
+package dsl.gn.cup
+import dsl.gn.ool
+
+gen JFlexGn is JavaGn
+	fun grammar(_grammar)
+		in 
+			_grammar.parser_path / _grammar.name "_JFlex" ".jflex"
+		write		
+			the_package(_grammar) $
+			imports(_grammar) $ $
+			"%%" $ $
+			options(_grammar) $ $
+			is_at_eof_method(_grammar) $ $			
+			macros(_grammar) $ $
+			"%%" $ $			
+			states(_grammar)							
+		end
+	end
+		
+	fun	the_package(_grammar)
+		"package " _grammar.parser_package_name ";" $
+	end
+	
+	fun imports(_grammar)	
+		"import org.cocuyo.parsing.cup.*;" $
+		"import org.cocuyo.parsing.*;" $
+		user_code("imports") $
+	end
+	
+	fun options(_grammar)
+		"%class " _grammar.name "JFlexLexer" $
+		"%line" $ "%column" $ "%char" $
+		"%full" $ "%type CupToken" $ "%cup" $
+		"%public" $
+	end
+	
+	fun user_code(_tag, _default = "")	
+		get "/*open-"  _tag " */" .. "/*close-" _tag " */" or 
+			_default
+		end
+	end
+	
+	fun macros(_grammar)	
+		common_macros(_grammar) $ $		
+		user_code("other-macros") $ $		
+	end
+	
+	fun common_macros(_grammar)	
+		user_code("common-macros",			
+			$
+			white_macro(_grammar) $
+			new_line_macro(_grammar) $
+			tab_macro(_grammar) $			
+		)		
+	end
+	
+	fun white_macro(_grammar)	
+		"WHITE_SPACE = [\ \b\012]"
+	end
+	
+	fun new_line_macro(_grammar)	
+		"NEW_LINE = \r|\n|\r\n"
+	end
+	
+	fun tab_macro(g)	
+		"TAB = \t"
+	end
+	
+	fun macro(_grammar, _term)	
+		terminal(_term) " =" $
+		
+		if _term.is_literal? do					
+			- _term.text				
+		else
+			user_code("macro-def-" _term.text)							
+		end
+	end
+
+	fun states(_grammar)	
+		"<YYINITIAL>"
+		block:
+			for _t in _grammar.terminalsByName sep $ do			
+				state(_grammar, _t)				
+			end
+		end
+		$ $ 
+		common_states(_grammar)
+	end
+	
+	fun common_states(_grammar)	
+		user_code("common-states", 
+			$
+			tab_state(_grammar) $
+			new_line_state(_grammar) $
+			white_state(_grammar) $
+			error_state(_grammar) $
+		 ) $ $ 		 
+		 eof_state(_grammar)
+	end
+	
+	fun error_state(_gammar)	
+		"."
+		block:
+			'CupToken _token = new CupToken(-1, yytext(), "",yyline, yycolumn, yychar);' $
+			"_token.isBadToken(true);" $
+			"return _token;"			 			
+		end
+	end
+	
+	fun eof_state(_grammar)	
+		"<<EOF>>"		
+		block:
+			"return new CupToken(" _grammar.name "Symbol.EOF"
+			', yytext(), "", yyline, yycolumn, 0, true);'
+		end
+	end
+	
+	fun new_line_state(_grammar)		
+		"{NEW_LINE} {}"		
+	end
+	
+	fun white_state(_grammar)
+		"{WHITE_SPACE}+ {}"		
+	end
+	
+	fun tab_state(_grammar)	
+		"{TAB}"
+		block:
+			user_code("tab-incr","yycolumn = yycolumn - yycolumn%4 + 3;")
+		end			
+	end
+	
+	fun state(_grammar, _term)
+		if _term.is_literal? do												
+				_default = {  '"' _term.text '"'  }
+			else
+				_default = {  '"@' _term.text '"' }
+		end					
+		
+		user_code( "state-def- " _term.text, $ - _default $)
+				
+		block:
+			"return new CupToken(" _grammar.name "Symbol."
+			terminal(_term)
+			', yytext(), "", yyline, yycolumn, 0);'
+		end $
+						
+	end
+	
+	fun terminals(_grammar)	
+		for _t in _grammar.terminals_by_name sep $ do		
+			terminal(_t)
+		end
+	end
+	
+	fun target_code(_code)	
+		"%{" $ - _code "%}"
+	end
+	
+	fun is_at_eof_method(g)	
+		target_code:			
+				"public boolean isAtEOF()"
+  				block("return zzEOFDone;") $
+  				user_code("other-methods") $
+  		end
+	end
+	
+	fun terminal(terminal)	
+		{terminal.name}.upper_case
+	end
+end

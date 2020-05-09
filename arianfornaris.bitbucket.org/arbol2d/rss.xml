@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<rss version="2.0">
+<channel>
+  <title>Noticias de Pinta Arboles 2D</title>
+  <link>http://arianfornaris.bitbucket.org/arbol2d/index.html</link>
+  <description>Noticias sobre nuevas características y nuevos árboles</description>
+  <item>
+    <title>¡Hola Mundo!</title>
+    <link>http://arianfornaris.bitbucket.org/arbol2d/index.html</link>
+	<author>boniatillo@gmail.com</author>
+	<guid>0</guid>
+    <description>
+	<![CDATA[
+	<p>
+	Creado el noticiero sobre Pinta Arboles 2D.
+	</p>
+	<p>
+	Por ahora solo mostramos un árbol, un pino y un revolico.
+	</p>
+	]]>
+	</description>
+  </item>
+  <item>
+    <title>Alain se pregunta</title>
+    <link>http://arianfornaris.bitbucket.org/arbol2d/index.html</link>
+	<author>boniatillo@gmail.com</author>
+	<guid>1</guid>
+    <description>
+	<![CDATA[
+	<p>Alain se pregunta si podemos ponerle yerba al árbol, además un paisaje y hacer un juego.</p>
+	<p>Prueba tú mismo con este programa para generar yerba:</p>
+
+	<pre>
+// Yerba
+
+var w = canvas.width;
+
+// avanza el cursor a la esquina izquierda
+rotate(90);
+up(w/2);
+rotate(-90);
+
+var x = 0;
+
+// mientras el cursor este en pantalla
+while(x < w) {
+  push();
+  rotate(oneInRange(-15, 15));
+ 
+  // pinta tallo verde
+  up(oneInRange(0, 2));
+  style(oneOf(['green', 'darkGreen', 'lightGreen']));
+  var r = oneInRange(-5, 5);
+  for(var i = 0; i < oneInRange(5, 40); i++) {
+    rotate(r);
+      stick(2);
+  }
+ 
+  // pinta una flor con probabilidad 0.8
+  if (maybe(0.8)) {
+      style(oneOf(['lightGray', 'orange', 'darkGreen']));
+      ball(1.5);
+  }
+ 
+  pop();
+ 
+  // avanza el cursor a la derecha
+  var s = oneInRange(0, 2);
+  rotate(-90);
+  up(s);
+  rotate(90);
+ 
+  x += s;
+ }
+	</pre>
+]]>
+	</description>
+  </item>
+  
+ <item>
+	<title>Nuevas funciones makeTreeFunc y evalTree para componer paisajes</title>
+    <link>http://arianfornaris.bitbucket.org/arbol2d/index.html</link>
+	<author>boniatillo@gmail.com</author>
+	<guid>2</guid>
+    <description>
+<![CDATA[
+<p>
+Ahora cuentas con dos nuevas funciones que te facilitan componer árboles y paisajes utilizando programas escrtios previamente.
+</p>
+<p>
+Las funciones son <code>makeTreeFunc(treeName)</code> y <code>evalTree(treeName)</code>. 
+Con la primera creas una función a partir del código de uno de los árboles mostrados en el menú. 
+La segunda es similar a la primera, solo que la función creada es evaluada, es decir: también "pinta".
+</p>
+<p>
+Ejecuta tú mismo el siguiente programa para pintar tres pinos:
+</p>
+<pre>
+// Tres pinos
+
+var pino = makeTreeFunc('Pino 1');
+
+pino();
+
+push();
+rotate(oneInRange(-20, -45));
+pino();
+pop();
+
+push();
+rotate(oneInRange(20, 45));
+pino();
+pop();
+</pre>
+
+]]>
+	</description>
+</item>
+
+ <item>
+	<title>Prueba Pinta Arboles 2D sin conexión a Internet</title>
+    <link>http://arianfornaris.bitbucket.org/arbol2d/index.html</link>
+	<author>boniatillo@gmail.com</author>
+	<guid>3</guid>
+    <description><![CDATA[
+<p>
+Prueba <b>Pinta Arboles 2D</b> sin conexión a Internet. 
+</p>
+<p>
+Solo tienes que descargar este fichero <a href='http://arianfornaris.bitbucket.org/arbol2d/download/PintaArbol2D_v0.1.0.zip'>PintaArbol2D_v0.1.0.zip</a>
+y copiarlo en tu PC. Luego lo descomprimes y abres el fichero <code>arbol2d/index.html</code> en tu navigador.
+</p>
+<p>
+En el sitio encontrarás siempre la última versión.
+</p>
+]]>
+	</description>
+</item>
+
+<item>
+	<title>Nuevo árbol con yerba</title>
+    <link>http://arianfornaris.bitbucket.org/arbol2d</link>
+	<author>boniatillo@gmail.com</author>
+	<guid>4</guid>
+    <description><![CDATA[
+<p>
+En una noticia anterior enviamos una programa para generar yerba. Ahora este programa está incluido en el menú de árboles.
+Prueba con <code>Yerba 1</code> y <code>Arbol con Yerba 1</code>
+</p>
+<p>
+Si ya te bajaste la última version de Pinta Arboles 2D, solo tienes que reemplazar el fichero <code>programs.xml</code> con la ultima versión del mismo. La última versión la encuentras en:
+<a href='http://arianfornaris.bitbucket.org/arbol2d/programs.xml'>programs.xml</a>.
+]]>
+	</description>
+</item>
+
+<item>
+	<title>Nuevo sol y paisaje</title>
+    <link>http://arianfornaris.bitbucket.org/arbol2d</link>
+	<author>boniatillo@gmail.com</author>
+	<guid>5</guid>
+    <description><![CDATA[
+<p>
+Esta vez tenemos de nuevo un sol y un paisaje que combina el árbol, la yerba y el sol.
+</p>
+<p>
+Si ya te bajaste la última version de Pinta Arboles 2D, solo tienes que reemplazar el fichero <a href='http://arianfornaris.bitbucket.org/arbol2d/programs.xml'>programs.xml</a>, pues este contiene los últimos árboles.
+]]>
+	</description>
+</item>
+
+</channel>
+
+</rss>

@@ -1,0 +1,123 @@
+package dsl.gn.ebnf
+
+gen HTML_EBNF_Aspects
+	
+	on EBNFGn.simple_non_terminal do simple_non_terminal
+	on EBNFGn.literal do literal
+	
+	fun simple_non_terminal(_symbol)
+		"<b>" EBNFGn.simple_non_terminal(_symbol) "</b>"
+	end
+	
+	fun literal(_literal)
+		"<i>" _literal.text "</i>"
+	end
+	
+end
+
+gen AglyEBNFGn is EBNFGn
+	fun simple_non_terminal(_symbol)
+		"<" super(_symbol) ">"
+	end
+	
+	fun rule(_rule)
+		"<" _rule.name ">"
+		$
+		indent
+			":" alts(_rule.alts)
+		end
+	end
+	
+	fun literal(_literal)
+		_literal.text
+	end
+	
+end
+
+gen EBNFGn
+	
+	fun grammar(_grammar)		
+			rules(_grammar)		
+	end
+	
+	fun rules(_grammar)
+		for _rule in _grammar.rules sep $ do
+			rule(_rule) $ ";"
+		end
+	end	
+	
+	fun rule(_rule)
+		_rule.name $ 
+		indent 
+			":"
+			alts(_rule.alts)
+		end
+	end
+	
+	fun alts(_alts)		
+		for _alt in _alts sep $ "|" do
+			- alt(_alt)
+		end
+	end
+	
+	fun alt(_alt)
+		for _expr in _alt sep " " do
+			alt_expr(_expr)
+		end
+	end
+	
+	fun alt_expr(_expr)
+		if _expr.is_cuantifier? do
+			expr_cuantifier(_expr)
+		elif _expr.is_sub_rule? do
+			expr_sub_rule(_expr)
+		else
+			symbol(_expr)
+		end		
+	end
+
+	fun symbol(_symbol)
+		if _symbol.is_literal? do
+			literal(_symbol)
+		elif _symbol.is_non_terminal? do
+			non_terminal(_symbol)
+		else
+			terminal(_symbol)
+		end
+	end
+	
+	fun non_terminal(_symbol)
+		if _symbol.is_virtual? do
+			virtual_non_terminal(_symbol)
+		else
+			simple_non_terminal(_symbol)
+		end
+	end
+	
+	fun virtual_non_terminal(_symbol)
+		"(" alt(_symbol.sub_alt) " => " _symbol.name ")" 
+	end
+	
+	fun simple_non_terminal(_symbol)
+		_symbol.text
+	end
+	
+	fun terminal(_symbol)
+		_symbol.name
+	end
+	
+	fun literal(_symbol)
+		'"' _symbol.text '"'
+	end
+	
+	fun expr_cuantifier(_cuant)
+		"( " alt_expr(_cuant.expression) " )" _cuant.kind_text	
+	end
+	fun expr_sub_rule(sub_rule)
+		"( "
+		for alt in sub_rule.alts sep " | " do
+			alt(alt)
+		end
+		" )" 		
+	end
+end

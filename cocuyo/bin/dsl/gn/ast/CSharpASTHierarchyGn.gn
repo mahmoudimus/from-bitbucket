@@ -1,0 +1,57 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+import dsl.gn.ool
+
+gen CSharpASTHierarchyGn is CSharpGn
+	
+	abstract_ast_gen = CSharpAbstractASTGn
+	list_ast_gen = CSharpListASTGn
+	trivial_ast_gen = CSharpTrivialASTGn
+	
+	fun hierarchy(_hierarchy)		
+		for _type in _hierarchy do
+			type(_type) $
+		end	
+		CSharpListASTGn.default(_hierarchy)
+		ast_types_root(_hierarchy)								
+	end		
+	
+	fun ast_types_root(_hierarchy)
+	
+		_root = ASTGn.ast_type_name("Root")
+	
+		CSharpTypeGn.file("I" _root, _hierarchy.base_path):
+			CSharpTypeGn.namespace(_hierarchy.ast_package_name):
+				imports({"Cocuyo.Parsing"})
+				get "//code-open" $ .. $ "//code-close"  or				
+					"public interface I" _root " : IAST" 
+					block: end				
+				end
+			end				
+		end
+		
+		CSharpTypeGn.file(_root, _hierarchy.base_path):
+			imports({"Cocuyo.Parsing"})
+			CSharpTypeGn.namespace(_hierarchy.ast_package_name):
+				get "//code-open" $ .. $ "//code-close"  or
+					"public class " _root " : AST" 
+					block: end
+				end				
+			end
+		end
+				
+	end
+	
+	fun type(_type)
+		if not _type.is_fool? do			
+			if _type.is_abstract? do
+				abstract_ast_gen.type(_type)
+			elif _type.is_list? do
+				list_ast_gen.type(_type)
+			else
+				trivial_ast_gen.type(_type)
+			end
+		end
+	end
+	
+end

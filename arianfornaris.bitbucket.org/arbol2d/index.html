@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pinta Arboles 2D</title>
+<script src="arbol2d_api.js"></script>
+<script src="lib/codemirror.js"></script>
+<link rel="stylesheet" href="lib/codemirror.css">
+<script src="lib/util/simple-hint.js"></script>
+<link rel="stylesheet" href="lib/util/simple-hint.css">
+<script src="mode/javascript/javascript.js"></script>
+<link rel="stylesheet" href="theme/eclipse.css">
+
+
+<style>
+body {
+	
+}
+pre {
+	background: rgb(235,235,235);
+	border-style: solid;
+	border-width: 1px;
+	padding:10px;
+}
+
+h3 {
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+}
+
+code {
+	font-weight: bold;
+	color:darkBlue;
+}
+
+.status {
+	font-size:10px;
+	color:red;
+	margin-left:10px;
+}
+
+</style>
+
+</head>
+
+<body style='background:white;'>
+<div style='text-align:center'>
+    <small>Env&iacute;ame tus &aacute;boles a boniatillo@gmail.com</small><br/>
+	<span style='font-size:8px;'>Comprobado en Firefox 10 y Chrome 15</span>
+</div>
+
+<table width='100%'>
+<tr>
+<tr>
+	<td width='20%' valign='top'>
+	<br/>
+	<br/>
+	<table width='100%'>
+		<tr>
+			<td width='20%'/>
+			<td width='80%'>
+				<div id='menu' style='text-align:left;'>
+				<!-- MENU -->
+				</div>
+			</td>
+			<td width='20%'/>
+		</tr>
+	</table>
+	</td>
+	<td>
+		<center>
+		<canvas id='myCanvas'  width='800' height='460'>
+		</canvas>
+        <small><b id='currentTree'></b></small>
+		</center>
+	<br>
+	<br>
+	<button id='paintButton' onclick='actionPaint()'>Pintar</button>
+	<br>
+	<tt style='font-size:10px;'>(Presiona CTRL+SPACE para abrir el asistence de funciones y CTRL+F11 para ejecutar)</tt>
+	<br>
+	<table width='100%' style='background:rgb(235,235,235);border-style:solid;border-width:1px;'>
+		<tr><td>
+			<textarea id='mainProgArea'></textarea>
+		</td></tr>
+	</table>
+	<br>
+	<button onclick='actionPaint()'>Pintar</button>
+	</div>
+	</td>
+	<td width='20%' valign='top'>
+		<p>
+		<span>Suscríbete al canal de las <a href="rss.xml">Noticias (RSS)</a> para estar actualizado de nuevas características y nuevos árboles.</span>
+		</p>
+		<p>
+		<span>Bájate la versión offline <a href='download/PintaArbol2D_v0.1.0.zip'>PintaArbol2D_v0.1.0.zip</a> para que pintes sin internet.</span>		
+		</p>
+		<p>
+		<span>Tambien debes bajar la última versión de los programas y reemplazar el fichero <a href='programs.xml'>programs.xml</a>.</span>
+		</p>
+	</td>
+	</tr>
+	<tr>
+	<td/>
+	<td>
+	
+	<!-- API -->
+	<h4>Funciones y variables definidas</h4>
+	
+    <dl>
+		<dt><code>up(len)</code></dt>
+		<dd>
+        Mueve el cursor de pintado <code>len</code> pixels (puntos) hacia adelante.
+        </dd>
+	</dl>
+    
+    <dl>
+		<dt><code>stick(len)</code></dt>
+		<dd>
+        Pinta un palo (l&iacute;nea) de tama&ntilde;o <code>len</code> y mueve el cursor de pintado hacia el final del palo.
+        </dd>
+	</dl>
+    
+    <dl>
+		<dt><code>ball(r)</code></dt>
+		<dd>
+        Pinta una bola de radio <code>r</code>.
+        </dd>
+	</dl>
+    
+     <dl>
+		<dt><code>style(s)</code></dt>
+		<dd>
+        Pone a <code>s</code> como estilo de pintado actual. El argumento <code>s</code> es el mismo utilizado por la variable <code>strokeStyle</code> del contexto 2D de HTML5. Ejemplos de estilos son <code>'red'</code>, <code>'blue'</code>, etc...
+        </dd>
+	</dl>
+    
+    <dl>
+		<dt><code>rotate(a)</code></dt>
+		<dd>
+        Rota la direcci&oacute;n del cursor de pintado en un &aacute;ngulo de <code>a</code> grados.
+        </dd>
+	</dl>
+	
+	<dl>
+		<dt><code>degree(r)</code></dt>
+		<dd>Convierte <code>r</code> (en radianes) a grados.</dd>
+	</dl>
+    
+     <dl>
+		<dt><code>push()</code></dt>
+		<dd>
+        Mete en la pila (guarda) los datos de pintado actuales, como la posici&oacute;n, rotaci&oacute;n y estilo.
+        </dd>
+	</dl>
+	
+    <dl>
+		<dt><code>pop()</code></dt>
+		<dd>
+        Saca de la pila (recupera) los datos de pintado y los carga como datos actuales.
+        </dd>
+	</dl>
+    
+	<dl>
+		<dt><code>makeTreeFunc(treeName)</code></dt>
+		<dd>
+        Crea una funci&oacute;n a partir de uno de los &aacute;programas mostrados en el menú. El siguiente ejemplo pinta un pino (Pino 1):
+		<pre>var pino = makeTreeFunc('Pino 1');
+// pinta un pino
+pino();</pre>
+        </dd>
+	</dl>
+	
+	<dl>
+		<dt><code>evalTree(treeName)</code></dt>
+		<dd>
+        Lo mismo que <code>makeTreeFunc(treeName)</code> solo que ejecuta la funci&oacute;n una vez que esta es creada. El siguiente ejemplo pinta dos pinos:
+		<pre>// pinta el primer pino
+var pino = evalTree('Pino 1');
+// pinta el segundo pino
+rotate(30);
+pino();</pre>
+        </dd>
+	</dl>
+	
+    <dl>
+		<dt><code>maybe(p)</code></dt>
+		<dd>
+		Retorna el valor <code>true</code> con una probabilidad <code>p</code>, 
+		y el valor <code>false</code> con una provabilidad <code>1 - p</code>.
+		</dd>
+	</dl>
+	
+    <dl>
+		<dt><code>maybeEval(p, c)</code></dt>
+		<dd>
+        Ejecuta la expresión javascript <code>c</code> con una probabilidad <code>p</code>.
+        </dd>
+	</dl>
+    
+     <dl>
+		<dt><code>maybeEvalFunc(p, f)</code></dt>
+		<dd>
+        Ejecuta la funci&oacute;n <code>f</code> con una probabilidad <code>p</code>.
+        </dd>
+	</dl>
+    
+    <dl>
+		<dt><code>oneOf(options)</code></dt>
+		<dd>
+        Devuelve aleatoriamente uno de los elementos de la lista <code>options</code>.
+        </dd>
+	</dl>
+    
+     <dl>
+		<dt><code>oneInRange(a, b)</code></dt>
+		<dd>
+        Devuelve aleatoriamente un número real comprendido entre <code>a</code> y <code>b</code>.
+        </dd>
+	</dl>
+    
+     <dl>
+		<dt><code>canvas</code></dt>
+		<dd>Referencia al HTML5 Canvas donde se pinta el árbol. Por ejemplo puedes utilizar esta variable para conocer propiedades del &aacute;rea de pintado como el ancho: <code>canvas.width</code> o el alto: <code>canvas.height</code>. </dd>
+	</dl>
+    
+     <dl>
+		<dt><code>ctx</code></dt>
+		<dd>El contexto 2D asociado a la variable <code>canvas</code>. Puedes utilizarlo para utilizar cualquiera de las caracter&iacute;sticas brindadas por HTML5.</dd>
+	</dl>
+    
+	</td>
+	<td/>
+	</tr>
+</table> <!-- Main table -->
+
+
+<script>
+
+function loadXML(url) {
+	var ajax = new XMLHttpRequest();
+	ajax.open("GET",url, false);
+	ajax.setRequestHeader("Content-type","text/xml");
+	ajax.send();
+	var response = ajax.responseXML;
+	return response;
+}
+
+function createMenu() {
+	var html = '';
+	for(var i = 0; i < progs.length; i++) {
+		var prog = progs[i];
+		var name = prog.getAttribute('name');	
+		html = html + '<a class="adref" href="javascript:loadProgram(' + i + ');">' + name + '</a><br/>';
+	}
+	document.getElementById('menu').innerHTML = html;
+}
+
+function loadProgram(i) {
+	var prog = progs[i];
+	var name = prog.getAttribute('name');
+	document.getElementById('currentTree').innerHTML = name;	
+	//document.getElementById('paintButton').innerHTML = 'Pintar <b>' + name + '</b> otra vez';	
+	editor.setValue(prog.textContent);
+	actionPaint();
+}
+
+
+var hints = funcNames;
+hints.push('function');
+hints.push('var');
+hints.push('for');
+hints.push('const');
+hints.push('if');
+hints.push('else');
+
+function hintsPopup(ke) {
+	CodeMirror.simpleHint(editor, function(e) {
+		var pos = e.getCursor();
+		var t = e.getTokenAt(pos);
+		var str = t.string;
+		var len = str.trim().length;
+		var start = len == 0? pos.ch : t.start;
+		var end = len == 0? pos.ch : t.end;
+		var filter = [];
+		var prefix = str.substring(0, pos.ch - start);
+		
+		for(var i = 0; i < hints.length; i++) {
+			var hint = hints[i];
+			if (hint.indexOf(prefix) == 0) {
+				filter.push(hint);
+			}
+		}
+		if (filter.length == 0) {
+			filter = hints;
+		} 
+		
+		return {list:filter, from:{line:pos.line, ch:start}, to:{line:pos.line, ch:end}};
+	})
+}
+var editor = CodeMirror.fromTextArea(document.getElementById("mainProgArea"), {
+  lineNumbers: true,
+  matchBrackets: true,
+  theme: 'eclipse',
+  mode: 'javascript',
+  tabSize: 2,
+  lineWrapping: true,
+  extraKeys: {'Ctrl-Space': hintsPopup, 'Ctrl-F11':actionPaint},
+});
+
+function actionPaint() {
+	window.scrollTo(0, 0);
+	paintTree(editor.getValue());
+}
+
+var xml = loadXML('programs.xml');
+var progs = xml.getElementsByTagName('prog');
+var MENU_ID = 'menu';
+var EDITOR_ID = 'editor';
+createMenu(progs);
+createCanvasContext('myCanvas');
+
+loadProgram(3);
+
+</script>
+
+</body>
+
+</html>

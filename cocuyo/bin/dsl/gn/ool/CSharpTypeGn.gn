@@ -1,0 +1,20 @@
+package dsl.gn.ool
+
+gen CSharpTypeGn is CSharpGn		
+	
+	fun file(_code, _name, _dir_path = {"."})
+		in 
+			_dir_path /_name ".cs" 
+		write
+			_code
+		end
+	end
+	
+	fun namespace(_body, _name)
+		"namespace " _name
+		block:			
+			_body
+		end
+	end
+	
+end

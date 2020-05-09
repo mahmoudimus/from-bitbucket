@@ -1,0 +1,212 @@
+package dsl.gn.cup
+import dsl.gn.ool
+
+gen CupParserGn is JavaGn
+
+	fun parser(_grammar)	
+		in
+			_grammar.parser_path / _grammar.name "Parser.java"
+		write		
+			the_package(_grammar)			
+			imports(_grammar)
+			class(_grammar)			
+		end
+	end
+	
+	fun class(_grammar)
+		"public class " parser_name(_grammar) " extends " _grammar.name "CupParser"
+			" implements IParser" 
+
+			block:								
+				class_fields(_grammar)
+				$ $
+				class_constructor(_grammar)
+				$ $
+				debug_reduce_method(_grammar) 
+				$ $
+				debug_shift_method(_grammar)
+				$ $
+				debug_message_method(_grammar)
+				$ $
+				parse_method(_grammar)
+				$ $	
+				report_error_method(_grammar)
+				$ $
+				report_fatal_error_method(_grammar)
+				$ $
+				syntax_error_method(_grammar)
+				$ $			
+				IParser_methods(_grammar)						
+			end		
+	end
+	
+	fun report_error_method(_grammar)
+		"@Override"$ 
+		"public void report_error(String aMsg, Object aInfo)"
+		block()
+	end
+	
+	fun report_fatal_error_method(_grammar)
+		"@Override"$ 
+		"public void report_fatal_error(String aMsg, Object aInfo)"
+		block()
+	end
+		
+	fun syntax_error_method(_grammar)
+		"@Override"$ 
+		"public void syntax_error(Symbol aToken)"
+		block:
+			"fErrors.addUnexpectedTokenError((IToken) aToken);"
+		end
+	end
+	
+	fun parse_method(_grammar)
+		"@Override"$ 
+		"public java_cup.runtime.Symbol parse()  throws Exception"
+		
+		block:
+			for_listener("listenStart()") $
+			"return debug_parse();"
+		end
+	end
+	
+	fun debug_message_method(_grammar)
+		"@Override"$ 
+		"public void debug_message(String aMsg)"
+		block:
+			user_code("before-message") $
+			
+			user_code("after-message")
+		end
+	end
+	
+	fun debug_reduce_method(_grammar)	
+		"@Override"$ 
+		"public void debug_reduce(int prodIndex, int nonTerminalIndex, int rhsSize)"
+		block:
+			user_code("before-reduce") $
+			for_listener("listenReduce(prodIndex)")
+			user_code("after-reduce")
+		end
+	end
+	
+	fun debug_shift_method(_grammar)
+		"@Override"$ 
+		"public void debug_shift(java_cup.runtime.Symbol symbol)"
+		block:
+			user_code("before-shift") $
+			for_listener("listenShift(symbol)")
+			user_code("after-shift")
+		end
+	end
+				
+	fun class_constructor(_grammar)
+		"public " parser_name(_grammar) "(ICupLexer aLexer)"
+		block:
+			"super(aLexer);"$ 					
+			"fListeners = new ArrayList<IParserListener>();"$ 
+			"fErrors = new RecognitionErrorCollection();"$ 
+			"fLexer = aLexer;"
+		end 
+		$
+		"/**" $
+		" * Create a  " parser_name(_grammar) " with a " _grammar.name "Lexer" $ 
+		" */" $
+		"public " parser_name(_grammar) "()"
+		block:
+			"this(new " _grammar.name "Lexer());"								
+		end 				
+	end
+	
+	fun class_fields(_grammar)
+		>private ArrayList<IParserListener> fListeners; 
+		>private ICupLexer fLexer; 
+		>private RecognitionErrorCollection fErrors;		 				
+	end
+	
+	fun the_package(_grammar)
+		"package " _grammar.parser_package_name ";" $ 
+	end
+
+	fun imports(_grammar)
+		"import java.util.ArrayList;"$ 
+		"import org.cocuyo.parsing.*;"$ 
+		"import org.cocuyo.parsing.cup.*;"$ 
+		"import java.io.IOException;"$ 
+		"import java_cup.runtime.*;"$ 
+		user_code("import")$ $		
+	end
+	
+	fun try_catch(code)
+		"try"
+		block(code) $
+		"catch(RecognitionException _e)"
+		block("fErrors.addErrors(_e.getErrors());") $
+		"catch(Exception e)"
+		block("throw new RuntimeException(e);")
+	end
+	
+	fun IParser_methods(_grammar)
+		parse_source_method(_grammar)$ $
+		parse_file_method(_grammar)$ $
+		add_listener_method(_grammar)$ $
+		get_errors_method(_grammar)$ $
+		has_errors_method(_grammar)	
+	end
+	
+	fun add_listener_method(_grammar)
+		"@Override"$ 
+		"public void addListener(IParserListener aListener)"
+		block:
+			"fListeners.add(aListener);"			
+		end
+	end
+
+	fun parse_source_method(_grammar)
+		"@Override"$ 
+		"public void parseSource(String aSource)"		
+		block:			
+			>fLexer.setInputSource(aSource);			
+			try_catch:				
+				"parse();"				
+			end				
+		end				
+	end
+	
+	fun parse_file_method(_grammar)
+		"@Override" $
+		"public void parseFile(String aFilePath) throws IOException"
+		block:
+			>fLexer.setInputFile(aFilePath); 
+			try_catch("parse();")
+		end
+	end
+	
+	fun get_errors_method(_grammar)
+		"@Override" $
+		"public RecognitionErrorCollection getErrors()"
+		block:
+			"return fErrors;"
+		end
+	end
+
+	fun has_errors_method(_grammar)
+		"@Override"$ 
+		"public boolean hasErrors()"
+		block:
+			"return getErrors().hasErrors();"
+		end
+	end
+	
+	fun for_listener(call)
+		"for(IParserListener listener : fListeners)"
+		block: 
+			"listener." call ";" 
+		end 
+		$
+	end
+	
+	fun parser_name(_grammar)
+		_grammar.name "Parser"
+	end
+end

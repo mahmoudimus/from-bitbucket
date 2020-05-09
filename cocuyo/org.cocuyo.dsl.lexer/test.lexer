@@ -1,0 +1,16 @@
+package test
+
+lexer Test
+
+start_string = "'"
+end_string = [\n\r\']
+
+start:
+	"lola" yield LOLA
+	"juana" yield JUANA
+	"cuca" yield CUCA
+	start_string goto string
+
+string:
+	~("\r" | "\n" | "\t" )+ goto start yield STRING
+end

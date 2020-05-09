@@ -1,0 +1,678 @@
+Created by PLY version 3.3 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    EQUALS
+    EPS
+    AS
+    IMPORT
+    MINUS
+
+Grammar
+
+Rule 0     S' -> unit
+Rule 1     unit -> GRAMMAR ID __list__0
+Rule 2     unit -> GRAMMAR ID
+Rule 3     unit -> __list__0
+Rule 4     unit -> <empty>
+Rule 5     __list__0 -> rule __list__0
+Rule 6     __list__0 -> rule
+Rule 7     rule -> ID LPAR ID RPAR COLON alts SEMI
+Rule 8     rule -> ID COLON alts SEMI
+Rule 9     __list__1 -> OR alt __list__1
+Rule 10    __list__1 -> OR alt
+Rule 11    alts -> alt __list__1
+Rule 12    alts -> alt
+Rule 13    __list__2 -> alt_elem __list__2
+Rule 14    __list__2 -> alt_elem
+Rule 15    alt -> __list__2
+Rule 16    alt -> <empty>
+Rule 17    alt_elem -> alt_elem TIMES
+Rule 18    alt_elem -> alt_elem GUESS
+Rule 19    alt_elem -> alt_elem PLUS
+Rule 20    alt_elem -> alt_elem COLON ID
+Rule 21    alt_elem -> basic_alt_elem
+Rule 22    basic_alt_elem -> LPAR alts RPAR
+Rule 23    basic_alt_elem -> ID IMPL alt
+Rule 24    basic_alt_elem -> ID
+Rule 25    basic_alt_elem -> STRING
+
+Terminals, with rules where they appear
+
+AS                   : 
+COLON                : 7 8 20
+EPS                  : 
+EQUALS               : 
+GRAMMAR              : 1 2
+GUESS                : 18
+ID                   : 1 2 7 7 8 20 23 24
+IMPL                 : 23
+IMPORT               : 
+LPAR                 : 7 22
+MINUS                : 
+OR                   : 9 10
+PLUS                 : 19
+RPAR                 : 7 22
+SEMI                 : 7 8
+STRING               : 25
+TIMES                : 17
+error                : 
+
+Nonterminals, with rules where they appear
+
+__list__0            : 1 3 5
+__list__1            : 9 11
+__list__2            : 13 15
+alt                  : 9 10 11 12 23
+alt_elem             : 13 14 17 18 19 20
+alts                 : 7 8 22
+basic_alt_elem       : 21
+rule                 : 5 6
+unit                 : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . unit
+    (1) unit -> . GRAMMAR ID __list__0
+    (2) unit -> . GRAMMAR ID
+    (3) unit -> . __list__0
+    (4) unit -> .
+    (5) __list__0 -> . rule __list__0
+    (6) __list__0 -> . rule
+    (7) rule -> . ID LPAR ID RPAR COLON alts SEMI
+    (8) rule -> . ID COLON alts SEMI
+
+    GRAMMAR         shift and go to state 2
+    $end            reduce using rule 4 (unit -> .)
+    ID              shift and go to state 4
+
+    __list__0                      shift and go to state 1
+    rule                           shift and go to state 3
+    unit                           shift and go to state 5
+
+state 1
+
+    (3) unit -> __list__0 .
+
+    $end            reduce using rule 3 (unit -> __list__0 .)
+
+
+state 2
+
+    (1) unit -> GRAMMAR . ID __list__0
+    (2) unit -> GRAMMAR . ID
+
+    ID              shift and go to state 6
+
+
+state 3
+
+    (5) __list__0 -> rule . __list__0
+    (6) __list__0 -> rule .
+    (5) __list__0 -> . rule __list__0
+    (6) __list__0 -> . rule
+    (7) rule -> . ID LPAR ID RPAR COLON alts SEMI
+    (8) rule -> . ID COLON alts SEMI
+
+    $end            reduce using rule 6 (__list__0 -> rule .)
+    ID              shift and go to state 4
+
+    __list__0                      shift and go to state 7
+    rule                           shift and go to state 3
+
+state 4
+
+    (7) rule -> ID . LPAR ID RPAR COLON alts SEMI
+    (8) rule -> ID . COLON alts SEMI
+
+    LPAR            shift and go to state 8
+    COLON           shift and go to state 9
+
+
+state 5
+
+    (0) S' -> unit .
+
+
+
+state 6
+
+    (1) unit -> GRAMMAR ID . __list__0
+    (2) unit -> GRAMMAR ID .
+    (5) __list__0 -> . rule __list__0
+    (6) __list__0 -> . rule
+    (7) rule -> . ID LPAR ID RPAR COLON alts SEMI
+    (8) rule -> . ID COLON alts SEMI
+
+    $end            reduce using rule 2 (unit -> GRAMMAR ID .)
+    ID              shift and go to state 4
+
+    __list__0                      shift and go to state 10
+    rule                           shift and go to state 3
+
+state 7
+
+    (5) __list__0 -> rule __list__0 .
+
+    $end            reduce using rule 5 (__list__0 -> rule __list__0 .)
+
+
+state 8
+
+    (7) rule -> ID LPAR . ID RPAR COLON alts SEMI
+
+    ID              shift and go to state 11
+
+
+state 9
+
+    (8) rule -> ID COLON . alts SEMI
+    (11) alts -> . alt __list__1
+    (12) alts -> . alt
+    (15) alt -> . __list__2
+    (16) alt -> .
+    (13) __list__2 -> . alt_elem __list__2
+    (14) __list__2 -> . alt_elem
+    (17) alt_elem -> . alt_elem TIMES
+    (18) alt_elem -> . alt_elem GUESS
+    (19) alt_elem -> . alt_elem PLUS
+    (20) alt_elem -> . alt_elem COLON ID
+    (21) alt_elem -> . basic_alt_elem
+    (22) basic_alt_elem -> . LPAR alts RPAR
+    (23) basic_alt_elem -> . ID IMPL alt
+    (24) basic_alt_elem -> . ID
+    (25) basic_alt_elem -> . STRING
+
+    OR              reduce using rule 16 (alt -> .)
+    SEMI            reduce using rule 16 (alt -> .)
+    LPAR            shift and go to state 12
+    ID              shift and go to state 19
+    STRING          shift and go to state 14
+
+    __list__2                      shift and go to state 13
+    alt_elem                       shift and go to state 15
+    basic_alt_elem                 shift and go to state 16
+    alt                            shift and go to state 17
+    alts                           shift and go to state 18
+
+state 10
+
+    (1) unit -> GRAMMAR ID __list__0 .
+
+    $end            reduce using rule 1 (unit -> GRAMMAR ID __list__0 .)
+
+
+state 11
+
+    (7) rule -> ID LPAR ID . RPAR COLON alts SEMI
+
+    RPAR            shift and go to state 20
+
+
+state 12
+
+    (22) basic_alt_elem -> LPAR . alts RPAR
+    (11) alts -> . alt __list__1
+    (12) alts -> . alt
+    (15) alt -> . __list__2
+    (16) alt -> .
+    (13) __list__2 -> . alt_elem __list__2
+    (14) __list__2 -> . alt_elem
+    (17) alt_elem -> . alt_elem TIMES
+    (18) alt_elem -> . alt_elem GUESS
+    (19) alt_elem -> . alt_elem PLUS
+    (20) alt_elem -> . alt_elem COLON ID
+    (21) alt_elem -> . basic_alt_elem
+    (22) basic_alt_elem -> . LPAR alts RPAR
+    (23) basic_alt_elem -> . ID IMPL alt
+    (24) basic_alt_elem -> . ID
+    (25) basic_alt_elem -> . STRING
+
+    OR              reduce using rule 16 (alt -> .)
+    RPAR            reduce using rule 16 (alt -> .)
+    LPAR            shift and go to state 12
+    ID              shift and go to state 19
+    STRING          shift and go to state 14
+
+    __list__2                      shift and go to state 13
+    alt_elem                       shift and go to state 15
+    basic_alt_elem                 shift and go to state 16
+    alt                            shift and go to state 17
+    alts                           shift and go to state 21
+
+state 13
+
+    (15) alt -> __list__2 .
+
+    OR              reduce using rule 15 (alt -> __list__2 .)
+    SEMI            reduce using rule 15 (alt -> __list__2 .)
+    RPAR            reduce using rule 15 (alt -> __list__2 .)
+    TIMES           reduce using rule 15 (alt -> __list__2 .)
+    GUESS           reduce using rule 15 (alt -> __list__2 .)
+    PLUS            reduce using rule 15 (alt -> __list__2 .)
+    COLON           reduce using rule 15 (alt -> __list__2 .)
+    LPAR            reduce using rule 15 (alt -> __list__2 .)
+    ID              reduce using rule 15 (alt -> __list__2 .)
+    STRING          reduce using rule 15 (alt -> __list__2 .)
+
+
+state 14
+
+    (25) basic_alt_elem -> STRING .
+
+    TIMES           reduce using rule 25 (basic_alt_elem -> STRING .)
+    GUESS           reduce using rule 25 (basic_alt_elem -> STRING .)
+    PLUS            reduce using rule 25 (basic_alt_elem -> STRING .)
+    COLON           reduce using rule 25 (basic_alt_elem -> STRING .)
+    LPAR            reduce using rule 25 (basic_alt_elem -> STRING .)
+    ID              reduce using rule 25 (basic_alt_elem -> STRING .)
+    STRING          reduce using rule 25 (basic_alt_elem -> STRING .)
+    OR              reduce using rule 25 (basic_alt_elem -> STRING .)
+    SEMI            reduce using rule 25 (basic_alt_elem -> STRING .)
+    RPAR            reduce using rule 25 (basic_alt_elem -> STRING .)
+
+
+state 15
+
+    (13) __list__2 -> alt_elem . __list__2
+    (14) __list__2 -> alt_elem .
+    (17) alt_elem -> alt_elem . TIMES
+    (18) alt_elem -> alt_elem . GUESS
+    (19) alt_elem -> alt_elem . PLUS
+    (20) alt_elem -> alt_elem . COLON ID
+    (13) __list__2 -> . alt_elem __list__2
+    (14) __list__2 -> . alt_elem
+    (17) alt_elem -> . alt_elem TIMES
+    (18) alt_elem -> . alt_elem GUESS
+    (19) alt_elem -> . alt_elem PLUS
+    (20) alt_elem -> . alt_elem COLON ID
+    (21) alt_elem -> . basic_alt_elem
+    (22) basic_alt_elem -> . LPAR alts RPAR
+    (23) basic_alt_elem -> . ID IMPL alt
+    (24) basic_alt_elem -> . ID
+    (25) basic_alt_elem -> . STRING
+
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for GUESS resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for COLON resolved as shift
+  ! shift/reduce conflict for LPAR resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    OR              reduce using rule 14 (__list__2 -> alt_elem .)
+    SEMI            reduce using rule 14 (__list__2 -> alt_elem .)
+    RPAR            reduce using rule 14 (__list__2 -> alt_elem .)
+    TIMES           shift and go to state 24
+    GUESS           shift and go to state 22
+    PLUS            shift and go to state 26
+    COLON           shift and go to state 25
+    LPAR            shift and go to state 12
+    ID              shift and go to state 19
+    STRING          shift and go to state 14
+
+  ! TIMES           [ reduce using rule 14 (__list__2 -> alt_elem .) ]
+  ! GUESS           [ reduce using rule 14 (__list__2 -> alt_elem .) ]
+  ! PLUS            [ reduce using rule 14 (__list__2 -> alt_elem .) ]
+  ! COLON           [ reduce using rule 14 (__list__2 -> alt_elem .) ]
+  ! LPAR            [ reduce using rule 14 (__list__2 -> alt_elem .) ]
+  ! ID              [ reduce using rule 14 (__list__2 -> alt_elem .) ]
+  ! STRING          [ reduce using rule 14 (__list__2 -> alt_elem .) ]
+
+    __list__2                      shift and go to state 23
+    alt_elem                       shift and go to state 15
+    basic_alt_elem                 shift and go to state 16
+
+state 16
+
+    (21) alt_elem -> basic_alt_elem .
+
+    TIMES           reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    GUESS           reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    PLUS            reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    COLON           reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    LPAR            reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    ID              reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    STRING          reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    OR              reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    RPAR            reduce using rule 21 (alt_elem -> basic_alt_elem .)
+    SEMI            reduce using rule 21 (alt_elem -> basic_alt_elem .)
+
+
+state 17
+
+    (11) alts -> alt . __list__1
+    (12) alts -> alt .
+    (9) __list__1 -> . OR alt __list__1
+    (10) __list__1 -> . OR alt
+
+    SEMI            reduce using rule 12 (alts -> alt .)
+    RPAR            reduce using rule 12 (alts -> alt .)
+    OR              shift and go to state 28
+
+    __list__1                      shift and go to state 27
+
+state 18
+
+    (8) rule -> ID COLON alts . SEMI
+
+    SEMI            shift and go to state 29
+
+
+state 19
+
+    (23) basic_alt_elem -> ID . IMPL alt
+    (24) basic_alt_elem -> ID .
+
+    IMPL            shift and go to state 30
+    TIMES           reduce using rule 24 (basic_alt_elem -> ID .)
+    GUESS           reduce using rule 24 (basic_alt_elem -> ID .)
+    PLUS            reduce using rule 24 (basic_alt_elem -> ID .)
+    COLON           reduce using rule 24 (basic_alt_elem -> ID .)
+    LPAR            reduce using rule 24 (basic_alt_elem -> ID .)
+    ID              reduce using rule 24 (basic_alt_elem -> ID .)
+    STRING          reduce using rule 24 (basic_alt_elem -> ID .)
+    OR              reduce using rule 24 (basic_alt_elem -> ID .)
+    SEMI            reduce using rule 24 (basic_alt_elem -> ID .)
+    RPAR            reduce using rule 24 (basic_alt_elem -> ID .)
+
+
+state 20
+
+    (7) rule -> ID LPAR ID RPAR . COLON alts SEMI
+
+    COLON           shift and go to state 31
+
+
+state 21
+
+    (22) basic_alt_elem -> LPAR alts . RPAR
+
+    RPAR            shift and go to state 32
+
+
+state 22
+
+    (18) alt_elem -> alt_elem GUESS .
+
+    TIMES           reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    GUESS           reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    PLUS            reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    COLON           reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    LPAR            reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    ID              reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    STRING          reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    OR              reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    RPAR            reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+    SEMI            reduce using rule 18 (alt_elem -> alt_elem GUESS .)
+
+
+state 23
+
+    (13) __list__2 -> alt_elem __list__2 .
+
+    OR              reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    SEMI            reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    RPAR            reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    TIMES           reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    GUESS           reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    PLUS            reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    COLON           reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    LPAR            reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    ID              reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+    STRING          reduce using rule 13 (__list__2 -> alt_elem __list__2 .)
+
+
+state 24
+
+    (17) alt_elem -> alt_elem TIMES .
+
+    TIMES           reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    GUESS           reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    PLUS            reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    COLON           reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    LPAR            reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    ID              reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    STRING          reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    OR              reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    RPAR            reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+    SEMI            reduce using rule 17 (alt_elem -> alt_elem TIMES .)
+
+
+state 25
+
+    (20) alt_elem -> alt_elem COLON . ID
+
+    ID              shift and go to state 33
+
+
+state 26
+
+    (19) alt_elem -> alt_elem PLUS .
+
+    TIMES           reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    GUESS           reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    PLUS            reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    COLON           reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    LPAR            reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    ID              reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    STRING          reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    OR              reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    RPAR            reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+    SEMI            reduce using rule 19 (alt_elem -> alt_elem PLUS .)
+
+
+state 27
+
+    (11) alts -> alt __list__1 .
+
+    SEMI            reduce using rule 11 (alts -> alt __list__1 .)
+    RPAR            reduce using rule 11 (alts -> alt __list__1 .)
+
+
+state 28
+
+    (9) __list__1 -> OR . alt __list__1
+    (10) __list__1 -> OR . alt
+    (15) alt -> . __list__2
+    (16) alt -> .
+    (13) __list__2 -> . alt_elem __list__2
+    (14) __list__2 -> . alt_elem
+    (17) alt_elem -> . alt_elem TIMES
+    (18) alt_elem -> . alt_elem GUESS
+    (19) alt_elem -> . alt_elem PLUS
+    (20) alt_elem -> . alt_elem COLON ID
+    (21) alt_elem -> . basic_alt_elem
+    (22) basic_alt_elem -> . LPAR alts RPAR
+    (23) basic_alt_elem -> . ID IMPL alt
+    (24) basic_alt_elem -> . ID
+    (25) basic_alt_elem -> . STRING
+
+    OR              reduce using rule 16 (alt -> .)
+    SEMI            reduce using rule 16 (alt -> .)
+    RPAR            reduce using rule 16 (alt -> .)
+    LPAR            shift and go to state 12
+    ID              shift and go to state 19
+    STRING          shift and go to state 14
+
+    __list__2                      shift and go to state 13
+    alt_elem                       shift and go to state 15
+    basic_alt_elem                 shift and go to state 16
+    alt                            shift and go to state 34
+
+state 29
+
+    (8) rule -> ID COLON alts SEMI .
+
+    ID              reduce using rule 8 (rule -> ID COLON alts SEMI .)
+    $end            reduce using rule 8 (rule -> ID COLON alts SEMI .)
+
+
+state 30
+
+    (23) basic_alt_elem -> ID IMPL . alt
+    (15) alt -> . __list__2
+    (16) alt -> .
+    (13) __list__2 -> . alt_elem __list__2
+    (14) __list__2 -> . alt_elem
+    (17) alt_elem -> . alt_elem TIMES
+    (18) alt_elem -> . alt_elem GUESS
+    (19) alt_elem -> . alt_elem PLUS
+    (20) alt_elem -> . alt_elem COLON ID
+    (21) alt_elem -> . basic_alt_elem
+    (22) basic_alt_elem -> . LPAR alts RPAR
+    (23) basic_alt_elem -> . ID IMPL alt
+    (24) basic_alt_elem -> . ID
+    (25) basic_alt_elem -> . STRING
+
+  ! shift/reduce conflict for LPAR resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
+  ! shift/reduce conflict for STRING resolved as shift
+    OR              reduce using rule 16 (alt -> .)
+    SEMI            reduce using rule 16 (alt -> .)
+    RPAR            reduce using rule 16 (alt -> .)
+    TIMES           reduce using rule 16 (alt -> .)
+    GUESS           reduce using rule 16 (alt -> .)
+    PLUS            reduce using rule 16 (alt -> .)
+    COLON           reduce using rule 16 (alt -> .)
+    LPAR            shift and go to state 12
+    ID              shift and go to state 19
+    STRING          shift and go to state 14
+
+  ! LPAR            [ reduce using rule 16 (alt -> .) ]
+  ! ID              [ reduce using rule 16 (alt -> .) ]
+  ! STRING          [ reduce using rule 16 (alt -> .) ]
+
+    alt                            shift and go to state 35
+    __list__2                      shift and go to state 13
+    alt_elem                       shift and go to state 15
+    basic_alt_elem                 shift and go to state 16
+
+state 31
+
+    (7) rule -> ID LPAR ID RPAR COLON . alts SEMI
+    (11) alts -> . alt __list__1
+    (12) alts -> . alt
+    (15) alt -> . __list__2
+    (16) alt -> .
+    (13) __list__2 -> . alt_elem __list__2
+    (14) __list__2 -> . alt_elem
+    (17) alt_elem -> . alt_elem TIMES
+    (18) alt_elem -> . alt_elem GUESS
+    (19) alt_elem -> . alt_elem PLUS
+    (20) alt_elem -> . alt_elem COLON ID
+    (21) alt_elem -> . basic_alt_elem
+    (22) basic_alt_elem -> . LPAR alts RPAR
+    (23) basic_alt_elem -> . ID IMPL alt
+    (24) basic_alt_elem -> . ID
+    (25) basic_alt_elem -> . STRING
+
+    OR              reduce using rule 16 (alt -> .)
+    SEMI            reduce using rule 16 (alt -> .)
+    LPAR            shift and go to state 12
+    ID              shift and go to state 19
+    STRING          shift and go to state 14
+
+    __list__2                      shift and go to state 13
+    alt_elem                       shift and go to state 15
+    basic_alt_elem                 shift and go to state 16
+    alt                            shift and go to state 17
+    alts                           shift and go to state 36
+
+state 32
+
+    (22) basic_alt_elem -> LPAR alts RPAR .
+
+    TIMES           reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    GUESS           reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    PLUS            reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    COLON           reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    LPAR            reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    ID              reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    STRING          reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    OR              reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    SEMI            reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+    RPAR            reduce using rule 22 (basic_alt_elem -> LPAR alts RPAR .)
+
+
+state 33
+
+    (20) alt_elem -> alt_elem COLON ID .
+
+    TIMES           reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    GUESS           reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    PLUS            reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    COLON           reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    LPAR            reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    ID              reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    STRING          reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    OR              reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    RPAR            reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+    SEMI            reduce using rule 20 (alt_elem -> alt_elem COLON ID .)
+
+
+state 34
+
+    (9) __list__1 -> OR alt . __list__1
+    (10) __list__1 -> OR alt .
+    (9) __list__1 -> . OR alt __list__1
+    (10) __list__1 -> . OR alt
+
+    SEMI            reduce using rule 10 (__list__1 -> OR alt .)
+    RPAR            reduce using rule 10 (__list__1 -> OR alt .)
+    OR              shift and go to state 28
+
+    __list__1                      shift and go to state 37
+
+state 35
+
+    (23) basic_alt_elem -> ID IMPL alt .
+
+    TIMES           reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    GUESS           reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    PLUS            reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    COLON           reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    LPAR            reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    ID              reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    STRING          reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    OR              reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    SEMI            reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+    RPAR            reduce using rule 23 (basic_alt_elem -> ID IMPL alt .)
+
+
+state 36
+
+    (7) rule -> ID LPAR ID RPAR COLON alts . SEMI
+
+    SEMI            shift and go to state 38
+
+
+state 37
+
+    (9) __list__1 -> OR alt __list__1 .
+
+    SEMI            reduce using rule 9 (__list__1 -> OR alt __list__1 .)
+    RPAR            reduce using rule 9 (__list__1 -> OR alt __list__1 .)
+
+
+state 38
+
+    (7) rule -> ID LPAR ID RPAR COLON alts SEMI .
+
+    ID              reduce using rule 7 (rule -> ID LPAR ID RPAR COLON alts SEMI .)
+    $end            reduce using rule 7 (rule -> ID LPAR ID RPAR COLON alts SEMI .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for TIMES in state 15 resolved as shift
+WARNING: shift/reduce conflict for GUESS in state 15 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 15 resolved as shift
+WARNING: shift/reduce conflict for COLON in state 15 resolved as shift
+WARNING: shift/reduce conflict for LPAR in state 15 resolved as shift
+WARNING: shift/reduce conflict for ID in state 15 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 15 resolved as shift
+WARNING: shift/reduce conflict for LPAR in state 30 resolved as shift
+WARNING: shift/reduce conflict for ID in state 30 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 30 resolved as shift

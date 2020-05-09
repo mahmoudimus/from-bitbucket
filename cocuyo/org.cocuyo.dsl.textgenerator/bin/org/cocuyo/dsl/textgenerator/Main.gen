@@ -1,0 +1,16 @@
+package org.cocuyo.gen;
+
+generator Main
+{
+	main(args)
+	{
+		JavaASTBuilderGen.grammar(TextGeneratorGrammar, "org.cocuyo.languages.textgenerator.ast", {"java.util.*" "cocuyo.parsing.*"}, "./ast")
+		JavaASTHierarchyGen.grammar(TextGeneratorGrammar, "org.cocuyo.languages.textgenerator.ast", {"java.util.*" "cocuyo.parsing.*" }, "./ast")
+		
+		CupGrammarGen.grammar(TextGeneratorGrammar, "org.cocuyo.languages.textgenerator", ".")				
+		CupParserGen.parser(TextGeneratorGrammar, "org.cocuyo.languages.textgenerator", ".")
+		
+		JFlexGen.grammar(TextGeneratorGrammar, "org.cocuyo.languages.textgenerator", ".")
+		JFlexLexerGen.grammar(TextGeneratorGrammar, "org.cocuyo.languages.textgenerator", ".")
+	}
+}

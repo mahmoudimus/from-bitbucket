@@ -1,0 +1,72 @@
+package org.cocuyo.dsl.lexer.syntax;
+/*open-import*/
+import java_cup.runtime.*;
+/*close-import*/
+
+init with {:  :};
+scan with {: return getScanner().next_token(); :};
+/*open-init*//*close-init*/
+
+terminal
+	LIT_9/*,*/, LIT_8/*->*/, LIT_7/*yield*/, LIT_6/*on*/, LIT_5/*?=*/, LIT_4/*from*/, LIT_3/*include*/, LIT_2/*end*/, LIT_1/*lexer*/, LIT_0/*package*/, ID/*id*/, LINE/*line*/, STRING_LITERAL/*string_literal*/;
+
+non terminal
+	Unit, LexerDef, Include, Regex, TransitionSet, Transition, Pattern, Name, LexerDefList, IncludeList, RegexList, TransitionSetList, TransitionList;
+
+
+/* Rules (13) */
+
+Unit
+	::=	LIT_0/*package*/ Name LexerDefList
+	|	LexerDefList
+	/*open-Unit*//*close-Unit*/;
+LexerDef
+	::=	LIT_1/*lexer*/ ID/*id*/ IncludeList RegexList TransitionSetList LIT_2/*end*/
+	/*open-LexerDef*//*close-LexerDef*/;
+Include
+	::=	LIT_3/*include*/ ID/*id*/ LIT_4/*from*/ Name
+	|	LIT_3/*include*/ Name
+	/*open-Include*//*close-Include*/;
+Regex
+	::=	ID/*id*/ LIT_5/*?=*/ LINE/*line*/
+	/*open-Regex*//*close-Regex*/;
+TransitionSet
+	::=	LIT_6/*on*/ ID/*id*/ LIT_7/*yield*/ ID/*id*/ LIT_8/*->*/ ID/*id*/ TransitionList
+	|	LIT_6/*on*/ ID/*id*/ LIT_7/*yield*/ ID/*id*/ TransitionList
+	|	LIT_6/*on*/ ID/*id*/ LIT_8/*->*/ ID/*id*/ TransitionList
+	|	LIT_6/*on*/ ID/*id*/ TransitionList
+	/*open-TransitionSet*//*close-TransitionSet*/;
+Transition
+	::=	Pattern LIT_7/*yield*/ ID/*id*/ LIT_8/*->*/ ID/*id*/
+	|	Pattern LIT_7/*yield*/ ID/*id*/
+	|	Pattern LIT_8/*->*/ ID/*id*/
+	|	Pattern
+	/*open-Transition*//*close-Transition*/;
+Pattern
+	::=	ID/*id*/
+	|	STRING_LITERAL/*string_literal*/
+	/*open-Pattern*//*close-Pattern*/;
+Name
+	::=	ID/*id*/ LIT_9/*,*/ Name
+	|	ID/*id*/
+	/*open-Name*//*close-Name*/;
+LexerDefList
+	::=	LexerDef LexerDefList
+	|	
+	/*open-LexerDefList*//*close-LexerDefList*/;
+IncludeList
+	::=	Include IncludeList
+	|	
+	/*open-IncludeList*//*close-IncludeList*/;
+RegexList
+	::=	Regex RegexList
+	|	
+	/*open-RegexList*//*close-RegexList*/;
+TransitionSetList
+	::=	TransitionSet TransitionSetList
+	|	
+	/*open-TransitionSetList*//*close-TransitionSetList*/;
+TransitionList
+	::=	Transition TransitionList
+	|	Transition
+	/*open-TransitionList*//*close-TransitionList*/;

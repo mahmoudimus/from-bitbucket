@@ -1,0 +1,115 @@
+package dsl.gn.cup
+import dsl.gn.ool
+
+gen JFlexLexerGn is JavaGn
+	fun lexer(_grammar)	
+		in 
+			_grammar.parser_path / _grammar.name "Lexer.java" 
+		write		
+			the_package(_grammar) $
+			imports(_grammar)$ $
+			lexer_class(_grammar)$ $
+		end
+	end
+	
+	fun the_package(_grammar)	
+		"package " _grammar.parser_package_name ";" $
+	end
+	
+	fun imports(_grammar)	
+		"import java.io.*;" $
+		"import org.cocuyo.parsing.cup.*;"$
+		"import org.cocuyo.parsing.*;"$		
+		user_code("imports")		
+	end
+	
+	fun lexer_class(_grammar)	
+		"public class " _grammar.name "Lexer" 
+		" extends " _grammar.name "JFlexLexer"
+		" implements ICupLexer"
+		block:
+			fields(_grammar)$ $
+			constructors(_grammar)
+		end
+	end
+	
+	fun fields(_grammar)	
+		"private File fFile;"$
+		"private String fSource;"
+	end
+	
+	fun constructors(_grammar)			
+		"public " _grammar.name "Lexer()"
+		block({'this("");'})
+		$ $
+		"public " _grammar.name "Lexer(String aSource)"
+		block:
+			"super(new StringReader(aSource));"$
+			"fSource = aSource;"$
+			"fFile = null;"
+		end
+		$ $
+		"public " _grammar.name "Lexer(File aFile) throws FileNotFoundException"
+		block:
+			"super(new FileInputStream(aFile));" $
+			"fFile = aFile;" $
+			"fSource = null;"
+		end
+		$ $
+		"@Override"$
+		"public CupToken next_token() throws IOException"
+		block:
+			"CupToken _token = super.next_token();" $
+			"_token.setFilePath(getInputFilePath());" $
+			"if (_token.isBadToken())"
+			block:
+	    		'throw new RecognitionException(new RecognitionError('
+	   			'"' 'Invalid char ' "'" '"' "+ _token.getText() +" '"' "'" '"' 
+	   			', _token));' $			
+			end $
+			"return _token;" $
+		end
+		$ $
+		"public void setInputSource(String aSource)"
+		block:
+			"fSource = aSource;" $
+			"fFile = null;" $
+			"yyreset(new StringReader(aSource));"
+		end
+		$ $
+		"public void setInputFile(String aFilePath) throws FileNotFoundException"
+		block:
+			"fSource = null;" $
+			"fFile = new File(aFilePath);" $
+			"yyreset(new FileReader(aFilePath));"
+		end
+		$ $
+		"public String getInputFilePath()"
+		block:
+			'return fFile == null? "" : fFile.getPath();'
+		end
+		$ $
+		"public File getInputFile()"
+		block:
+			'return fFile;'
+		end		
+		$ $
+		"public String getInputSource()"
+		block:
+			"if (fSource != null)"
+	    	block:
+	    		"try"
+	    		block:
+					"FileInputStream _input = new FileInputStream(fFile);"$
+					"byte[] _buffer = new byte[(int) fFile.length()];"$
+					"_input.read(_buffer);"$
+					"fSource = new String(_buffer);"$
+	    		end $
+	    		"catch (Exception e)"
+	    		block("throw new RuntimeException(e);")$
+	    	end $	    				
+			"return fSource;"
+		end
+		
+	end
+end

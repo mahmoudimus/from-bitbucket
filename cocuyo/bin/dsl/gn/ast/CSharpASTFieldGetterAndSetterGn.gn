@@ -1,0 +1,12 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen CSharpASTFieldGetterAndSetterGn
+	on ASTGn.type_more_members do getters_and_setters
+	
+	fun getters_and_setters(_type)
+		CSharpASTFieldGetterGn.getters(_type)
+		CSharpASTFieldSetterGn.setters(_type)	
+	end
+end
+

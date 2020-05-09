@@ -1,0 +1,100 @@
+package dsl.gn.lexer
+
+import dsl.gn.ool
+
+gen JFlexFromLexerGn is JavaGn
+	
+	fun lexer(_lexer)
+		in 
+			_lexer.name ".jflex"
+		write
+			options(_lexer)
+			$ $
+			states_decl(_lexer)
+			$ $
+			macros(_lexer)
+			$ $
+			states(_lexer)
+			common_states(_lexer)
+		end
+	end
+	
+	fun states_decl(_lexer)
+		"%state "
+		for _state in _lexer.states_names sep " " do
+			state_name(_state)
+		end
+	end
+	
+	fun options(_lexer)
+		>%%
+		>%public
+		>%class LexerEditorLexer
+		>%implements IEditorLexer
+		>%unicode
+		>%pack
+		>%buffer 128
+		>%type List
+	end
+	
+	fun macros(_lexer)
+		user_code("macros",
+			$ "WHITE_SPACE = [\ \b\012]"
+			$ "NEW_LINE = \r|\n|\r\n"
+			$ "TAB = \t"
+			$
+		)
+	end
+	fun common_states(_lexer)
+	end
+	fun states(_lexer)
+		for _t in _lexer.transitions sep $ $ do
+			"<" state_name(_t.from_state) "> " $
+			_p = pattern(_t.pattern)
+			_p
+			block:
+				user_code(_t.from_state "-" _p "-" _t.goto_state) $
+				"yybenin(" state_name(_t.goto_state) ");"
+				if _t.is_final do 
+					$ yield_token(_t)
+				end
+			end
+		end
+	end 
+	
+	fun yield_token(_transition)
+		"return yieldToken(" _transition.yield_symbol ");"	
+	end
+	
+	fun pattern(_pattern)
+		if _pattern.is_native? do
+			native_pattern(_pattern)
+		elif _pattern.is_string? do
+			string_pattern(_pattern)
+		else
+			expr_pattern(_pattern)
+		end		
+	end
+	
+	fun native_pattern(_pattern)
+		_pattern.native_text
+	end
+	
+	fun string_pattern(_pattern)
+		'"' _pattern.text '"'
+	end
+	
+	fun expr_pattern(_pattern)
+		
+	end
+	
+	fun state_name(_state)
+		"STATE_" {_state}.upper_case
+	end
+	
+	fun regular_exprs(_lexer)
+		for _re in _lexer.regular_expressions sep $ do
+			_re.name
+		end
+	end
+end

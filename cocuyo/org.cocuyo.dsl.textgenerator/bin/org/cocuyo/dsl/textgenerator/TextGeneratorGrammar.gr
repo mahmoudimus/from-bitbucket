@@ -1,0 +1,160 @@
+package org.cocuyo.gen;
+
+grammar TextGeneratorGrammar
+
+	CompileUnit 
+		: 	PackageDef UnitElementList
+	;
+	
+	PackageDef
+		:	"package" Name 
+		|
+	;	-
+	
+	UnitElementList
+		:	UnitElement UnitElementList
+		|	UnitElement	
+	;
+	
+	UnitElement
+		:	Generator  
+		|	Import
+	;	
+	
+	Import
+		:	"import" Name
+	;
+	
+	Generator
+		:	"gen" Id@name "is" NameList@supers GeneratorMemberList@members "end"
+		|	"gen" Id@name GeneratorMemberList@members "end"		
+	;
+	
+	GeneratorMemberList
+		:	GeneratorMember GeneratorMemberList
+		|
+	;
+	
+	GeneratorMember
+		:	AliasDecl	
+		|	FuncDecl
+		|	AspectDecl
+	;
+	
+	AliasDecl
+		:	Id@type "." Id@member "as" Id@alias
+	;
+
+	AspectDecl
+		:	"on" Name@pointcut "do" Id@newfunc
+	;
+	
+	FuncDecl
+		:	StandardFuncDecl->( "fun" Id "(" FuncFormalArgList@args ")" CodeList@code "end" )
+		|	BuiltinFuncDecl->( "fun" Id "(" FuncFormalArgList@args ")" "return" Name )
+		|	PropertyDecl->( Id "=" Code@code )
+	;
+	
+	FuncFormalArgList
+		:	FormalArg "," FuncFormalArgList
+		|	FormalArg
+		|
+	;
+	
+	FormalArg
+		:	Id
+		|	Id "=" Code
+	;
+				
+	Code
+		:	CodeBlock ->("{" CodeList "}")
+		|	ForLoop
+		|	NewLineCode->( "$" )
+		|	TabCode->( "-" )
+		|	IndentCode->("indent" CodeList "end")
+		|	FuncCall->( Code "." Id FuncCallArgs )
+		|	FuncCall->( Id FuncCallArgs )
+		|	FuncCall->( "super" FuncCallArgs )	
+		|	ObjectPropertyAccess->( Code "." Id )
+		|	ObjectPropertyExistAndAccess->( Code "." Id "?")
+		|	ObjectId->( Id )
+		|	ObjectId->( "super" )		
+		|	StringLiteralCode->( (StringToken)string_literal ) 		
+		|	NumberLiteralCode->( (IToken)number_literal )
+		|	BooleanLiteralCode->( (IToken)"true"@token )
+		|	BooleanLiteralCode->( (IToken)"false"@token )
+		|	CodeAlias->( Id "=" Code)
+		|	Conditional	
+		|	GetCode
+		|	PathSeparator->( "/" )
+		|	UnitCode-> ("in" CodeList@path "write" CodeList@content "end" )
+		|	AspectListeners->( "aspects" NameList "listen" CodeList "end" )
+	;
+	
+	GetCode
+		:	"get" CodeList@from ".." CodeList@to "or" CodeList@def "end"
+		|	"get" CodeList@from ".." CodeList@to "end"
+	;
+	
+ 	Conditional
+		:	"if" ConditionalPart "end"
+	;
+	
+	ConditionalPart
+		:	Condition "do" CodeList@docode "else" CodeList@elsecode 
+		|	Condition "do" CodeList@docode "elif" ConditionalPart 
+		|	Condition "do" CodeList@docode 
+	;
+	Condition
+		:	TrueCondition->(Code)
+		|	FalseCondition->("not" Code)
+	;
+	
+	ForLoop
+		:	"for" Id@varid "in" CodeList@iterable "do" CodeList@instr "end"
+		|	"for" Id@varid "in" CodeList@iterable "sep" CodeList@separator "do" 			CodeList@instr "end"
+	;
+	
+	FuncCallArgs
+		:	"(" FuncCallArguments ")" ":" CodeList "end"
+		|	"(" FuncCallArguments ")"
+		|	":" CodeList "end"
+	;
+
+	FuncCallArguments
+		:	FuncCallArgList
+	;
+	
+	FuncCallArgList
+		:	FuncCallArgList "," FuncCallArg  
+		|	FuncCallArg
+	;
+	
+	FuncCallArg
+		:	CodeList
+	;
+		
+	CodeList
+		:	Code CodeList
+		|
+	;
+	
+	NameList
+		:	Name "," NameList
+		|	Name
+	;
+	
+	Name 
+		:	NameIdList
+	;
+	
+	NameIdList
+		:	NameIdList "." Id
+		|	Id
+	;	
+	
+	Id
+		:	(IToken)id@token
+	;
+
+end

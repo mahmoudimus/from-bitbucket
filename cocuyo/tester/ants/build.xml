@@ -1,0 +1,12 @@
+<project name="Test" >		
+	<import file="${cocuyo.ant}"/>	
+	<cocuyoimport lib="gold" />		
+	
+	<startcocuyo />	
+	
+	<cocuyogold object="G" 
+		showtext="false" 
+		writetofile="true" 
+		basedir="d:/home/arian/test"/>
+	
+</project> 	

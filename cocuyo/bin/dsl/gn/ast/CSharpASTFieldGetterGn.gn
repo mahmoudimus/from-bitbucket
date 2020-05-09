@@ -1,0 +1,31 @@
+package dsl.gn.ast
+import dsl.gn.ebnf
+
+gen CSharpASTFieldGetterGn is CSharpASTGn
+	
+	on ASTGn.type_more_members do getters
+	
+	fun getters(_type)
+		if not _type.is_list? do 
+			$
+			for _child in _type.child_nodes sep $ do
+				CSharpASTFieldGetterGn.getter_modifier " " child_type_name(_child) " get" 
+				_child.name "()"
+				
+				_field_name = field_name(_child.name)
+				
+				block:
+					get 
+						"//open-getter-" _field_name $ 
+						.. $ "//close-getter-" _field_name
+					or  
+						"return " _field_name ";"
+					end
+				end
+			end		
+		end		
+	end
+	
+	getter_modifier = "public"
+
+end

@@ -1,0 +1,57 @@
+package tiger.syntax;
+/*open-import*/
+import java_cup.runtime.*;
+/*close-import*/
+
+init with {:  :};
+scan with {: return getScanner().next_token(); :};
+/*open-init*//*close-init*/
+
+terminal
+	LIT_12/*;*/, LIT_11/*)*/, LIT_10/*(*/, LIT_9/*]*/, LIT_8/*[*/, LIT_7/*.*/, LIT_6/*/*/, LIT_5/***/, LIT_4/*-*/, LIT_3/*+*/, LIT_2/*&*/, LIT_1/*|*/, LIT_0/*=*/, NUMBER/*number*/, IDENT/*ident*/;
+
+non terminal
+	Expr, OrExpr, AndExpr, AddExpr, MulExpr, AccesExpr, Value, ExprList, Id;
+
+
+/* Rules (9) */
+
+Expr
+	::=	OrExpr LIT_0/*=*/ OrExpr
+	|	OrExpr
+	/*open-Expr*//*close-Expr*/;
+OrExpr
+	::=	OrExpr LIT_1/*|*/ AndExpr
+	|	AndExpr
+	/*open-OrExpr*//*close-OrExpr*/;
+AndExpr
+	::=	AndExpr LIT_2/*&*/ AddExpr
+	|	AddExpr
+	/*open-AndExpr*//*close-AndExpr*/;
+AddExpr
+	::=	AddExpr LIT_3/*+*/ MulExpr
+	|	AddExpr LIT_4/*-*/ MulExpr
+	|	MulExpr
+	/*open-AddExpr*//*close-AddExpr*/;
+MulExpr
+	::=	MulExpr LIT_5/***/ AccesExpr
+	|	MulExpr LIT_6/*/*/ AccesExpr
+	|	AccesExpr
+	/*open-MulExpr*//*close-MulExpr*/;
+AccesExpr
+	::=	AccesExpr LIT_7/*.*/ Id
+	|	AccesExpr LIT_8/*[*/ Expr LIT_9/*]*/
+	|	Value
+	/*open-AccesExpr*//*close-AccesExpr*/;
+Value
+	::=	NUMBER/*number*/
+	|	Id
+	|	LIT_10/*(*/ ExprList LIT_11/*)*/
+	/*open-Value*//*close-Value*/;
+ExprList
+	::=	Expr LIT_12/*;*/ ExprList
+	|	Expr
+	/*open-ExprList*//*close-ExprList*/;
+Id
+	::=	IDENT/*ident*/
+	/*open-Id*//*close-Id*/;

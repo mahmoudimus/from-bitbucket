@@ -1,0 +1,90 @@
+package dsl.gn.gold
+
+gen GoldGn
+	
+	fun grammar(_grammar)	
+		in 
+			_grammar.parser_path / _grammar.name "_Gold" ".grm"
+		write
+			user_definitions(_grammar)
+			rules(_grammar.BNF)
+		end		
+	end
+	
+	fun user_definitions(_grammar)
+		user_code("user-defs") $ $
+	end
+	
+	fun user_code(_tag, _default = "")
+		get 
+			"!open-" _tag $ .. $ "!close-" _tag
+		or
+			_default
+		end
+	end
+		
+	fun rules(_grammar)
+		for _rule in _grammar.rules sep $ do
+			rule(_rule) $
+		end
+	end	
+	
+	fun rule(_rule)
+		non_terminal_name(_rule.name) $ 
+		indent 
+			"::="
+			alts(_rule.alts)
+		end
+	end
+	
+	fun non_terminal_name(_name)
+		"<" _name ">"
+	end
+	
+	fun alts(_alts)		
+		for _alt in _alts sep $ "|" do
+			- alt(_alt)
+		end
+	end
+	
+	fun alt(_alt)
+		for _symbol in _alt sep " " do
+			symbol(_symbol)
+		end
+	end
+
+	fun symbol(_symbol)
+		if _symbol.is_literal? do
+			literal(_symbol)
+		elif _symbol.is_non_terminal? do
+			non_terminal(_symbol)
+		else
+			terminal(_symbol)
+		end
+	end
+	
+	fun non_terminal(_symbol)
+		if _symbol.is_virtual? do
+			virtual_non_terminal(_symbol)
+		else
+			simple_non_terminal(_symbol)
+		end
+	end
+	
+	fun virtual_non_terminal(_symbol)
+		alt(_symbol.sub_alt) 
+	end
+	
+	fun simple_non_terminal(_symbol)
+		non_terminal_name(_symbol.text)
+	end
+	
+	fun terminal(_symbol)
+		_symbol.name
+	end
+	
+	fun literal(_symbol)
+		"'" _symbol.text "'"
+	end
+	
+end

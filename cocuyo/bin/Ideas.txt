@@ -1,0 +1,103 @@
+******* 
+Crear un lenguaje de nombre "Cocuyo" que sirva de contenedor de otros lenguajes, 
+de esta forma se pueden combinar
+programas de distintos lenguajes en un mismo fichero. Por ejemplo:
+
+--- Inicio del fichero (ej.cocuyo)---
+
+package un.paquete
+
+(gn:
+
+	gen MyGenerator
+		fun main()
+			EBNFGn.grammar(G.BNF)
+		end
+	end
+
+:gn)
+
+(native:
+	native Lexer is
+		number = {Digit}+
+:native)
+
+(gr:
+
+	grammar G
+		tokens by Lexer
+		G -> number+;
+	end
+	
+:gr)
+
+--- Final del fchero ---
+
+***********
+Dar la opcion de no generar el ASA de una regla, pues quizas se quiera utilizar una clase que ya existe.
+
+***********
+Incorporar el operador >> al lenguaje TextGenerator. Estos operadores sirven para iterar listas. 
+Por ejemplo:
+
+----------
+fun test()
+	list = { "a", "b"}
+	list >> bold("color: red") #produce : <b style=color:red>a</b><b style=color:red>b</b>
+	#es equivalente a
+	for item in list do
+		bold(item, "color: red")
+	end
+end
+
+fun bold(item, style)
+	"<b style=" style ">" item "</b>" 
+end
+----------
+
+*******
+Se hace necesario crear un mecanoismo de modelación, para esto se puede
+adaptar un lenguaje de propósito general a cocuyo, sobre todo respecto al protocolo de comunicación 
+entre lenguajes. Estas son las opciones:
+- Adaptar Java con anotaciones y la herencia de una clase común DSLObject.
+- Adaptar a Python, Ruby o Groovy.
+- Diseñar un nuevo lenguaje.
+	Nombre: Luly, Feijoo, Cuba,...
+
+*******
+Permitir definir funciones y generadores anonimos:
+
+f = fun()
+end
+
+f = fun(a,b) a.upper b.lower end
+list >> f 
+
+Pero la idea quizas no se buena, pues de eta manera se puede llegar a escribir generadores poco redefinibles 
+por la herencia y los aspectos.
+
+-------------------------------------------------
+TERMINADAS
+
+********************
+Crear un DSL con el cual se pueda escribir especificaciones de alguna heramienta en su propio 
+lenguaje pero que se pueda intergrar a Cocuyo, en especial a los paquetes. Por ejemplo:
+
+--- Inicio del fichero (mylexer.grm.native) ---
+
+package test.nativelang
+
+@(property = "value")
+native MyGoldLexer is
+
+ID = ({Letter} | {number}) +
+
+
+--- Final del fichero ---
+
+El procesamiento de este lenguaje consiste en extraer las líneas de texto hasta la secuencia ' is' y 
+obtener de estas el paquete donde se alojaría la defnición además del nombre de la misma. 
+Las siguientes líneas son la deinición en si.
+>>>>Este lenguaje ya fue creado y se llama Native DSL
+
+
